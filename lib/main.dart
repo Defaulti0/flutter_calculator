@@ -4,7 +4,6 @@ import 'supabase_client.dart';
 
 final supabase = SupabaseClientInstance.instance;
 
-
 void main() {
   runApp(const RegisterCalc());
 }
@@ -29,7 +28,6 @@ class RegisterCalc extends StatelessWidget {
           colorScheme: darkColorScheme ?? _defaultDarkScheme,
           useMaterial3: true,
         ),
-        themeMode: ThemeMode.dark,
         home: DefaultTabController(
           length: 2,
           child: Scaffold(
