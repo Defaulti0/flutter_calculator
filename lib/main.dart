@@ -38,9 +38,34 @@ double calcPenny(int inputPenny){
   return inputPenny * 0.01;
 }
 
+double calcNickel(int inputNickel){
+  return inputNickel * 0.05;
+}
+
+double calcDime(int inputDime){
+  return inputDime * 0.10;
+}
+
 double calcQuarter(int inputQuarter){
   return inputQuarter * 0.25;
 }
+
+double calcOne(int inputOne){
+  return inputOne * 1;
+}
+
+double calcFive(int inputFive){
+  return inputFive * 5;
+}
+
+double calcTen(int inputTen){
+  return inputTen * 10;
+}
+
+double calcTwenty(int inputTwenty){
+  return inputTwenty * 20;
+}
+
 
 class _RegCalcState extends State<RegCalc> {
   static final _defaultLightScheme = ColorScheme.fromSwatch(primarySwatch: Colors.blue, brightness: Brightness.dark);
@@ -62,11 +87,27 @@ class _RegCalcState extends State<RegCalc> {
   late TextEditingController fives2 = TextEditingController();
   late TextEditingController tens2 = TextEditingController();
   late TextEditingController twent2 = TextEditingController();  
-  // add late TextEditingController bills = TextEditingController(); here
   
-  final _future = getReg1();
+  String penniVal = "";
+  String nickeVal = "";
+  String dimesVal = "";
+  String quartVal = "";
+  String onesVal = "";
+  String fiveVal = "";
+  String tensVal = "";
+  String twenVal = "";
+  String penniVal2 = "";
+  String nickeVal2 = "";
+  String dimesVal2 = "";
+  String quartVal2 = "";
+  String onesVal2 = "";
+  String fiveVal2 = "";
+  String tensVal2 = "";
+  String twenVal2 = "";
 
-  static const regDefault = 317.50;
+  // final _future = getReg1();
+
+  // static const regDefault = 317.50;
 
   @override
   void dispose() {
@@ -86,11 +127,65 @@ class _RegCalcState extends State<RegCalc> {
     fives2.dispose();
     tens2.dispose();
     twent2.dispose();
-
-    // add bills.dispose(); here
     super.dispose();
   }
 
+
+  void updateText(String textController, int currType){
+    setState(() {
+      switch (currType) {
+        case 0:
+          penniVal = calcPenny(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 1:
+          nickeVal = calcNickel(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 2:
+          dimesVal = calcDime(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 3:
+          quartVal = calcQuarter(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 4:
+          onesVal = calcOne(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 5:
+          fiveVal = calcFive(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 6:
+          tensVal = calcTen(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 7:
+          twenVal = calcTwenty(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 8:
+          penniVal2 = calcPenny(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 9:
+          nickeVal2 = calcNickel(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 10:
+          dimesVal2 = calcDime(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 11:
+          quartVal2 = calcQuarter(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 12:
+          onesVal2 = calcOne(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 13:
+          fiveVal2 = calcFive(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 14:
+          tensVal2 = calcTen(int.parse(textController)).toStringAsFixed(2);
+          break;
+        case 15:
+          twenVal2 = calcTwenty(int.parse(textController)).toStringAsFixed(2);
+          break;
+      }
+      
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,12 +238,16 @@ class _RegCalcState extends State<RegCalc> {
                             ],
                             controller: quart,
                             onChanged: (String value) async {
-                              calcQuarter(int.parse(quart.text));
+                              if (quart.text == ""){
+                                updateText("0", 3);
+                              } else {
+                                updateText(quart.text, 3);
+                              }
                             },
                           ),
                         ),
-                        const Flexible(
-                          child: Text("Quarter Calc Result"),
+                        Flexible(
+                          child: Text("Result: \$$quartVal"),
                           ),
                       ],
                     ),
@@ -170,10 +269,17 @@ class _RegCalcState extends State<RegCalc> {
                               FilteringTextInputFormatter.digitsOnly
                             ],
                             controller: dimes,
+                            onChanged: (String value) async {
+                              if (dimes.text == ""){
+                                updateText("0", 2);
+                              } else {
+                                updateText(dimes.text, 2);
+                              }
+                            },
                           ),
                         ),
-                        const Flexible(
-                          child: Text("Dime Calc Result"),
+                        Flexible(
+                          child: Text("Result: \$$dimesVal"),
                           ),
                       ],
                     ),
@@ -195,10 +301,17 @@ class _RegCalcState extends State<RegCalc> {
                               FilteringTextInputFormatter.digitsOnly
                             ],
                             controller: nickl,
+                            onChanged: (String value) async {
+                              if (nickl.text == ""){
+                                updateText("0", 1);
+                              } else {
+                                updateText(nickl.text, 1);
+                              }
+                            },
                           ),
                         ),
-                        const Flexible(
-                          child: Text("Nickel Calc Result"),
+                        Flexible(
+                          child: Text("Result: \$$nickeVal"),
                           ),
                       ],
                     ),
@@ -220,11 +333,145 @@ class _RegCalcState extends State<RegCalc> {
                               FilteringTextInputFormatter.digitsOnly
                             ],
                             controller: penni,
-                            onChanged: (value) {},
+                            onChanged: (String value) async {
+                              if (penni.text == ""){
+                                updateText("0", 0);
+                              } else {
+                                updateText(penni.text, 0);
+                              }
+                            },
                           ),
                         ),
+                        Flexible(
+                          child: Text("Result: \$$penniVal"),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
                         const Flexible(
-                          child: Text("Penny Calc Result"),
+                          child: Text("Quarters: "),
+                        ),
+                        Flexible(
+                          flex: 2,
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter # of quarters',
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            controller: quart,
+                            onChanged: (String value) async {
+                              if (quart.text == ""){
+                                updateText("0", 3);
+                              } else {
+                                updateText(quart.text, 3);
+                              }
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          child: Text("Result: \$$quartVal"),
+                          ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Flexible(
+                          child: Text("Dimes: "),
+                        ),
+                        Flexible(
+                          flex: 2,
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter # of dimes',
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            controller: dimes,
+                            onChanged: (String value) async {
+                              if (dimes.text == ""){
+                                updateText("0", 2);
+                              } else {
+                                updateText(dimes.text, 2);
+                              }
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          child: Text("Result: \$$dimesVal"),
+                          ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Flexible(
+                          child: Text("Nickels: "),
+                        ),
+                        Flexible(
+                          flex: 2,
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter # of nickels',
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            controller: nickl,
+                            onChanged: (String value) async {
+                              if (nickl.text == ""){
+                                updateText("0", 1);
+                              } else {
+                                updateText(nickl.text, 1);
+                              }
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          child: Text("Result: \$$nickeVal"),
+                          ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Flexible(
+                          child: Text("Pennies: "),
+                        ),
+                        Flexible(
+                          flex: 2,
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter # of ones',
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            controller: ones,
+                            onChanged: (String value) async {
+                              if (ones.text == ""){
+                                updateText("0", 0);
+                              } else {
+                                updateText(ones.text, 4);
+                              }
+                            },
+                          ),
+                        ),
+                        Flexible(
+                          child: Text("Result: \$$onesVal"),
                           ),
                       ],
                     ),
