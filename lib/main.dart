@@ -66,6 +66,12 @@ double calcTwenty(int inputTwenty){
   return inputTwenty * 20;
 }
 
+String checkReg1(String penniVal, String nickeVal, String dimesVal, String quartVal, String onesVal, String fiveVal, String tensVal, String twenVal, String extraVal){
+  
+  double sum = int.parse(penniVal) + int.parse(nickeVal) +dimesVal + quartVal + onesVal + fiveVal + tensVal + twenVal + extraVal;
+  
+}
+
 
 class _RegCalcState extends State<RegCalc> {
   static final _defaultLightScheme = ColorScheme.fromSwatch(primarySwatch: Colors.blue, brightness: Brightness.dark);
@@ -87,23 +93,27 @@ class _RegCalcState extends State<RegCalc> {
   late TextEditingController fives2 = TextEditingController();
   late TextEditingController tens2 = TextEditingController();
   late TextEditingController twent2 = TextEditingController();  
+  late TextEditingController extra = TextEditingController();
+  late TextEditingController extra2 = TextEditingController();
   
-  String penniVal = "";
-  String nickeVal = "";
-  String dimesVal = "";
-  String quartVal = "";
-  String onesVal = "";
-  String fiveVal = "";
-  String tensVal = "";
-  String twenVal = "";
-  String penniVal2 = "";
-  String nickeVal2 = "";
-  String dimesVal2 = "";
-  String quartVal2 = "";
-  String onesVal2 = "";
-  String fiveVal2 = "";
-  String tensVal2 = "";
-  String twenVal2 = "";
+  String penniVal = "0.00";
+  String nickeVal = "0.00";
+  String dimesVal = "0.00";
+  String quartVal = "0.00";
+  String onesVal = "0.00";
+  String fiveVal = "0.00";
+  String tensVal = "0.00";
+  String twenVal = "0.00";
+  String penniVal2 = "0.00";
+  String nickeVal2 = "0.00";
+  String dimesVal2 = "0.00";
+  String quartVal2 = "0.00";
+  String onesVal2 = "0.00";
+  String fiveVal2 = "0.00";
+  String tensVal2 = "0.00";
+  String twenVal2 = "0.00";
+  String extraVal = "0.00";
+  String extraVal2 = "0.00";
 
   // final _future = getReg1();
 
@@ -127,6 +137,8 @@ class _RegCalcState extends State<RegCalc> {
     fives2.dispose();
     tens2.dispose();
     twent2.dispose();
+    extra.dispose();
+    extra2.dispose();
     super.dispose();
   }
 
@@ -182,6 +194,12 @@ class _RegCalcState extends State<RegCalc> {
         case 15:
           twenVal2 = calcTwenty(int.parse(textController)).toStringAsFixed(2);
           break;
+        case 16:
+          extraVal = textController;
+          break;
+        case 17:
+          extraVal2 = textController;
+          break;
       }
       
     });
@@ -216,275 +234,324 @@ class _RegCalcState extends State<RegCalc> {
             ),
             body: TabBarView(
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Row(
+                SingleChildScrollView(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        const Flexible(
-                          child: Text("Quarters: "),
-                        ),
-                        Flexible(
-                          flex: 2,
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter # of quarters',
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              child: Text("Quarters: "),
                             ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            controller: quart,
-                            onChanged: (String value) async {
-                              if (quart.text == ""){
-                                updateText("0", 3);
-                              } else {
-                                updateText(quart.text, 3);
-                              }
-                            },
-                          ),
-                        ),
-                        Flexible(
-                          child: Text("Result: \$$quartVal"),
-                          ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Flexible(
-                          child: Text("Dimes: "),
-                        ),
-                        Flexible(
-                          flex: 2,
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter # of dimes',
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '25¢',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                controller: quart,
+                                onChanged: (String value) async {
+                                  if (quart.text == ""){
+                                    updateText("0", 3);
+                                  } else {
+                                    updateText(quart.text, 3);
+                                  }
+                                },
+                              ),
                             ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            controller: dimes,
-                            onChanged: (String value) async {
-                              if (dimes.text == ""){
-                                updateText("0", 2);
-                              } else {
-                                updateText(dimes.text, 2);
-                              }
-                            },
-                          ),
-                        ),
-                        Flexible(
-                          child: Text("Result: \$$dimesVal"),
-                          ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Flexible(
-                          child: Text("Nickels: "),
-                        ),
-                        Flexible(
-                          flex: 2,
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter # of nickels',
+                            Flexible(
+                              flex: 1,
+                              child: Text("Result: \$$quartVal"),
                             ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            controller: nickl,
-                            onChanged: (String value) async {
-                              if (nickl.text == ""){
-                                updateText("0", 1);
-                              } else {
-                                updateText(nickl.text, 1);
-                              }
-                            },
-                          ),
+                          ],
                         ),
-                        Flexible(
-                          child: Text("Result: \$$nickeVal"),
-                          ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Flexible(
-                          child: Text("Pennies: "),
-                        ),
-                        Flexible(
-                          flex: 2,
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter # of pennies',
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              child: Text("Dimes: "),
                             ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            controller: penni,
-                            onChanged: (String value) async {
-                              if (penni.text == ""){
-                                updateText("0", 0);
-                              } else {
-                                updateText(penni.text, 0);
-                              }
-                            },
-                          ),
-                        ),
-                        Flexible(
-                          child: Text("Result: \$$penniVal"),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Flexible(
-                          child: Text("Quarters: "),
-                        ),
-                        Flexible(
-                          flex: 2,
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter # of quarters',
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '10¢',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                controller: dimes,
+                                onChanged: (String value) async {
+                                  if (dimes.text == ""){
+                                    updateText("0", 2);
+                                  } else {
+                                    updateText(dimes.text, 2);
+                                  }
+                                },
+                              ),
                             ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            controller: quart,
-                            onChanged: (String value) async {
-                              if (quart.text == ""){
-                                updateText("0", 3);
-                              } else {
-                                updateText(quart.text, 3);
-                              }
-                            },
-                          ),
-                        ),
-                        Flexible(
-                          child: Text("Result: \$$quartVal"),
-                          ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Flexible(
-                          child: Text("Dimes: "),
-                        ),
-                        Flexible(
-                          flex: 2,
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter # of dimes',
+                            Flexible(
+                              flex: 1,
+                              child: Text("Result: \$$dimesVal"),
                             ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            controller: dimes,
-                            onChanged: (String value) async {
-                              if (dimes.text == ""){
-                                updateText("0", 2);
-                              } else {
-                                updateText(dimes.text, 2);
-                              }
-                            },
-                          ),
+                          ],
                         ),
-                        Flexible(
-                          child: Text("Result: \$$dimesVal"),
-                          ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Flexible(
-                          child: Text("Nickels: "),
-                        ),
-                        Flexible(
-                          flex: 2,
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter # of nickels',
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              child: Text("Nickels: "),
                             ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            controller: nickl,
-                            onChanged: (String value) async {
-                              if (nickl.text == ""){
-                                updateText("0", 1);
-                              } else {
-                                updateText(nickl.text, 1);
-                              }
-                            },
-                          ),
-                        ),
-                        Flexible(
-                          child: Text("Result: \$$nickeVal"),
-                          ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Flexible(
-                          child: Text("Pennies: "),
-                        ),
-                        Flexible(
-                          flex: 2,
-                          child: TextFormField(
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter # of ones',
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '5¢',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                controller: nickl,
+                                onChanged: (String value) async {
+                                  if (nickl.text == ""){
+                                    updateText("0", 1);
+                                  } else {
+                                    updateText(nickl.text, 1);
+                                  }
+                                },
+                              ),
                             ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            controller: ones,
-                            onChanged: (String value) async {
-                              if (ones.text == ""){
-                                updateText("0", 0);
-                              } else {
-                                updateText(ones.text, 4);
-                              }
-                            },
-                          ),
+                            Flexible(
+                              flex: 1,
+                              child: Text("Result: \$$nickeVal"),
+                            ),
+                          ],
                         ),
-                        Flexible(
-                          child: Text("Result: \$$onesVal"),
-                          ),
-                      ],
-                    ),
-                    
-                    // ======= bills =======
-                    
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              child: Text("Pennies: "),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '1¢',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                controller: penni,
+                                onChanged: (String value) async {
+                                  if (penni.text == ""){
+                                    updateText("0", 0);
+                                  } else {
+                                    updateText(penni.text, 0);
+                                  }
+                                },
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Text("Result: \$$penniVal"),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              child: Text("Twenties: "),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '\$20',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                controller: twents,
+                                onChanged: (String value) async {
+                                  if (twents.text == ""){
+                                    updateText("0", 7);
+                                  } else {
+                                    updateText(twents.text, 7);
+                                  }
+                                },
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Text("Result: \$$twenVal"),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              child: Text("Tens: "),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '\$10',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                controller: tens,
+                                onChanged: (String value) async {
+                                  if (tens.text == ""){
+                                    updateText("0", 6);
+                                  } else {
+                                    updateText(tens.text, 6);
+                                  }
+                                },
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Text("Result: \$$tensVal"),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              child: Text("Fives: "),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '\$5',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                controller: fives,
+                                onChanged: (String value) async {
+                                  if (fives.text == ""){
+                                    updateText("0", 5);
+                                  } else {
+                                    updateText(fives.text, 5);
+                                  }
+                                },
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Text("Result: \$$fiveVal"),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              child: Text("Ones: "),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '\$1',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                controller: ones,
+                                onChanged: (String value) async {
+                                  if (ones.text == ""){
+                                    updateText("0", 4);
+                                  } else {
+                                    updateText(ones.text, 4);
+                                  }
+                                },
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Text("Result: \$$onesVal"),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              child: Text("Extra Money: "),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '\$ Extras',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                controller: extra,
+                                onChanged: (String value) async {
+                                  if (extra.text == ""){
+                                    updateText("0", 16);
+                                  } else {
+                                    updateText(extra.text, 16);
+                                  }
+                                },
+                              ),
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Text("Result: \$$extraVal"),
+                            ),
+                          ],
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Add all vals, check to see if it's greater than, less than
+                            //  or equal to 317.50, return status
+                            // Compile data to submit to supabase
 
-                    ElevatedButton(
-                      onPressed: () {}, 
-                      child: const Text("Submit Change"),
-                    )
-                    // put submit button here
-                  ],
+                            checkReg1(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, tensVal, twenVal, extraVal);
+
+
+                          }, 
+                          child: const Text("Submit Change"),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
 
                 // other tab
