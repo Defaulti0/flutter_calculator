@@ -66,10 +66,48 @@ double calcTwenty(int inputTwenty){
   return inputTwenty * 20;
 }
 
-String checkReg1(String penniVal, String nickeVal, String dimesVal, String quartVal, String onesVal, String fiveVal, String tensVal, String twenVal, String extraVal){
+double findSum(String penniVal, String nickeVal, String dimesVal, String quartVal, String onesVal, String fiveVal, String tensVal, String twenVal, String extraVal){
+  return double.parse(penniVal) + double.parse(nickeVal) + double.parse(dimesVal) + double.parse(quartVal) + double.parse(onesVal) + double.parse(fiveVal) + double.parse(tensVal) + double.parse(twenVal) + double.parse(extraVal);
+}
+
+void checkReg1(String penniVal, String nickeVal, String dimesVal, String quartVal, String onesVal, String fiveVal, String tensVal, String twenVal, String extraVal){
   
-  double sum = int.parse(penniVal) + int.parse(nickeVal) +dimesVal + quartVal + onesVal + fiveVal + tensVal + twenVal + extraVal;
+  double regConst = 317.50;
+  String isExact = "";
+  double sum = findSum(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, tensVal, twenVal, extraVal);
   
+  if (sum > regConst){
+    isExact = "Over";
+  } else if (sum < regConst){
+    isExact = "Under";
+  } else {
+    isExact = "Correct";
+  }
+
+  sendReg1(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, tensVal, twenVal, extraVal, isExact, sum);
+}
+
+Future<void> sendReg1(String penniVal, String nickeVal, String dimesVal, String quartVal, String onesVal, String fiveVal, String tensVal, String twenVal, String extraVal, String isExact, double sum) async {
+
+  
+  await supabase
+      .from('register1')
+      .insert({
+        'dateTime': DateTime.now().toIso8601String(),
+        'pennies': double.parse(penniVal), 
+        'nickels': double.parse(nickeVal),
+        'dimes': double.parse(dimesVal),
+        'quarters': double.parse(quartVal),
+        'ones': double.parse(onesVal),
+        'fives': double.parse(fiveVal),
+        'tens': double.parse(tensVal),
+        'twenties': double.parse(twenVal),
+        'extra_bills': double.parse(extraVal),
+        'Status': isExact,
+        'total': sum,
+      });
+
+      // show notif saying it was successful
 }
 
 
@@ -114,10 +152,9 @@ class _RegCalcState extends State<RegCalc> {
   String twenVal2 = "0.00";
   String extraVal = "0.00";
   String extraVal2 = "0.00";
+  String total = "0.00";
 
   // final _future = getReg1();
-
-  // static const regDefault = 317.50;
 
   @override
   void dispose() {
@@ -141,7 +178,6 @@ class _RegCalcState extends State<RegCalc> {
     extra2.dispose();
     super.dispose();
   }
-
 
   void updateText(String textController, int currType){
     setState(() {
@@ -201,13 +237,13 @@ class _RegCalcState extends State<RegCalc> {
           extraVal2 = textController;
           break;
       }
-      
+
+      total = findSum(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, tensVal, twenVal, extraVal).toString();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     return DynamicColorBuilder(
       builder: (ColorScheme? lightColorScheme, ColorScheme? darkColorScheme) {
       return MaterialApp(
@@ -537,15 +573,30 @@ class _RegCalcState extends State<RegCalc> {
                             ),
                           ],
                         ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text("Total: \$$total")
+                            ),
+                          ],
+                        ),
                         ElevatedButton(
                           onPressed: () {
-                            // Add all vals, check to see if it's greater than, less than
-                            //  or equal to 317.50, return status
-                            // Compile data to submit to supabase
-
-                            checkReg1(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, tensVal, twenVal, extraVal);
-
-
+                            try {
+                              checkReg1(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, tensVal, twenVal, extraVal);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('An error occurred'),
+                                ),
+                              );
+                            } finally {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Updated Register 1 Log'),
+                                ),
+                              );
+                            }
                           }, 
                           child: const Text("Submit Change"),
                         ),
@@ -557,6 +608,13 @@ class _RegCalcState extends State<RegCalc> {
                 // other tab
                 const Text("Register 2"),
              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                // take to new page that fetches data from past 10 entries in DB
+              },
+              tooltip: 'Show history',
+              child: const Icon(Icons.history),
             ),
           ),
         ),

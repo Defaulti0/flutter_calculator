@@ -216,10 +216,10 @@ class _ListEmployeesState extends State<ListEmployees> {
                         addEmployee(fnControl, lnControl, empPinCont, empType);
                         updateList();
                         ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Added Employee.'),
-                                      ),
-                                    );
+                          const SnackBar(
+                            content: Text('Added Employee.'),
+                          ),
+                        );
                         Navigator.pop(context);
                         dispose();
                       },
