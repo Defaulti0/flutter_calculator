@@ -574,8 +574,9 @@ class _RegCalcState extends State<RegCalc> {
                           ],
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Expanded(
+                            Flexible(
                               child: Text("Total: \$$total")
                             ),
                           ],
@@ -584,18 +585,13 @@ class _RegCalcState extends State<RegCalc> {
                           onPressed: () {
                             try {
                               checkReg1(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, tensVal, twenVal, extraVal);
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                content: Text('Updated Register 1 Log'),
+                              ));
                             } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('An error occurred'),
-                                ),
-                              );
-                            } finally {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Updated Register 1 Log'),
-                                ),
-                              );
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                content: Text('An error occurred'),
+                              ));
                             }
                           }, 
                           child: const Text("Submit Change"),
