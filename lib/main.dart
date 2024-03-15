@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+
 
 
 Future<void> main() async {
@@ -327,7 +329,7 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
 
   void calcCashSales1(String tCashVal, String csInput){
     setState(() {
-      totalAfterCS = (double.parse(tCashVal) - double.parse(csInput)).toStringAsFixed(2);
+      totalAfterCS = (double.parse(tCashVal) - double.parse(csInput)).toString();
     });
   }
 
@@ -420,18 +422,22 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
-                                  hintText: '\$0.00',
+                                  hintText: '0.00',
                                 ),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly,
+                                  CurrencyTextInputFormatter(
+                                    locale: 'en_US',
+                                    symbol:'\$',
+                                    decimalDigits: 2,
+                                  ),
                                 ],
                                 controller: cashSales,
                                 onChanged: (String value) async {
                                   if (cashSales.text == ""){
                                     calcCashSales1(total, "0");
                                   } else {
-                                    calcCashSales1(total, cashSales.text);
+                                    calcCashSales1(total, cashSales.text.substring(1));
                                   }
                                 },
                               ),
