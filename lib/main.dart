@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/services.dart';
-import 'supabase_client.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-final supabase = SupabaseClientInstance.instance;
 
-void main() {
+Future<void> main() async {
+  await Supabase.initialize(
+    url: 'https://gcsoenjtznqmxcmakolu.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdjc29lbmp0em5xbXhjbWFrb2x1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTAxMjkyNjUsImV4cCI6MjAyNTcwNTI2NX0.uu2sjs07cps91Aeuhh3TDsukZH-Hn-oG94saoxXmXEM',
+  );
+
   runApp(
     const RegCalc()
   );
 }
+
+// Get a reference your Supabase client
+final supabase = Supabase.instance.client;
+
+// final supabase = SupabaseClientInstance.instance;
 
 class RegCalc extends StatefulWidget{
   const RegCalc({super.key});
@@ -73,6 +82,7 @@ double calcTwenty(int inputTwenty){
 double findSum(String penniVal, String nickeVal, String dimesVal, 
   String quartVal, String onesVal, String fiveVal, String tensVal, 
   String twenVal, String extraVal){
+
   return double.parse(penniVal) + double.parse(nickeVal) + 
     double.parse(dimesVal) + double.parse(quartVal) + double.parse(onesVal) + 
     double.parse(fiveVal) + double.parse(tensVal) + double.parse(twenVal) +
@@ -81,7 +91,7 @@ double findSum(String penniVal, String nickeVal, String dimesVal,
 
 void checkReg1(String penniVal, String nickeVal, String dimesVal, 
   String quartVal, String onesVal, String fiveVal, String tensVal, 
-  String twenVal, String extraVal){
+  String twenVal, String extraVal, String cSales){
   
   double regConst = 317.50;
   String isExact = "";
@@ -97,13 +107,12 @@ void checkReg1(String penniVal, String nickeVal, String dimesVal,
   }
 
   sendReg1(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, 
-    tensVal, twenVal, extraVal, isExact, sum);
+    tensVal, twenVal, extraVal, isExact, sum, cSales);
 }
 
 Future<void> sendReg1(String penniVal, String nickeVal, String dimesVal, 
   String quartVal, String onesVal, String fiveVal, String tensVal, 
-  String twenVal, String extraVal, String isExact, double sum) async {
-
+  String twenVal, String extraVal, String isExact, double sum, String cashSalesVal) async {
   
   await supabase
       .from('register1')
@@ -120,12 +129,13 @@ Future<void> sendReg1(String penniVal, String nickeVal, String dimesVal,
         'extra_bills': double.parse(extraVal),
         'Status': isExact,
         'total': sum,
+        'cashSales': double.parse(cashSalesVal),
       });
 }
 
 void checkReg2(String penniVal, String nickeVal, String dimesVal, 
   String quartVal, String onesVal, String fiveVal, String tensVal, 
-  String twenVal, String extraVal){
+  String twenVal, String extraVal, String cashSalesVal2){
   
   double regConst = 317.50;
   String isExact = "";
@@ -141,14 +151,13 @@ void checkReg2(String penniVal, String nickeVal, String dimesVal,
   }
 
   sendReg2(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, 
-    tensVal, twenVal, extraVal, isExact, sum);
+    tensVal, twenVal, extraVal, isExact, sum, cashSalesVal2);
 }
 
 Future<void> sendReg2(String penniVal, String nickeVal, String dimesVal, 
   String quartVal, String onesVal, String fiveVal, String tensVal, 
-  String twenVal, String extraVal, String isExact, double sum) async {
+  String twenVal, String extraVal, String isExact, double sum, String cashSalesVal) async {
 
-  
   await supabase
       .from('register2')
       .insert({
@@ -164,9 +173,8 @@ Future<void> sendReg2(String penniVal, String nickeVal, String dimesVal,
         'extra_bills': double.parse(extraVal),
         'Status': isExact,
         'total': sum,
+        'cashSales': double.parse(cashSalesVal),
       });
-
-      // show notif saying it was successful
 }
 
 
@@ -222,9 +230,9 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
   String total2 = "0.00";
   String cashSalesVal = "0.00";
   String cashSalesVal2 = "0.00";
-
-  // final _future = getReg1();
-
+  String totalAfterCS = "0.00";
+  String totalAfterCS2 = "0.00";
+  
   @override
   void dispose() {
     penni.dispose();
@@ -311,6 +319,21 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
         tensVal, twenVal, extraVal).toString();
       total2 = findSum(penniVal2, nickeVal2, dimesVal2, quartVal2, onesVal2, 
         fiveVal2, tensVal2, twenVal2, extraVal2).toString();
+
+      calcCashSales1(total, cashSales.text);
+      calcCashSales2(total2, cashSales2.text);
+    });
+  }
+
+  void calcCashSales1(String tCashVal, String csInput){
+    setState(() {
+      totalAfterCS = (double.parse(tCashVal) - double.parse(csInput)).toStringAsFixed(2);
+    });
+  }
+
+  void calcCashSales2(String tCashVal, String csInput){
+    setState(() {
+      totalAfterCS2 = (double.parse(tCashVal) - double.parse(csInput)).toStringAsFixed(2);
     });
   }
 
@@ -386,6 +409,35 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              child: Text("Cash Sales:"),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '\$0.00',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                controller: cashSales,
+                                onChanged: (String value) async {
+                                  if (cashSales.text == ""){
+                                    calcCashSales1(total, "0");
+                                  } else {
+                                    calcCashSales1(total, cashSales.text);
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -689,13 +741,16 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                             Flexible(
                               child: Text("Total: \$$total")
                             ),
+                            Flexible(
+                              child: Text("After Cash Sales: \$$totalAfterCS")
+                            )
                           ],
                         ),
                         ElevatedButton(
                           onPressed: () async {
                             try {
                               checkReg1(penniVal, nickeVal, dimesVal, quartVal, 
-                                onesVal, fiveVal, tensVal, twenVal, extraVal);
+                                onesVal, fiveVal, tensVal, twenVal, extraVal, cashSales.text);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text("Updated Register 1 Log"),
@@ -723,6 +778,35 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Flexible(
+                              flex: 1,
+                              child: Text("Cash Sales:"),
+                            ),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: '\$0.00',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                controller: cashSales2,
+                                onChanged: (String value) async {
+                                  if (cashSales.text == ""){
+                                    calcCashSales1(total2, "0");
+                                  } else {
+                                    calcCashSales1(total2, cashSales2.text);
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -1026,13 +1110,16 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                             Flexible(
                               child: Text("Total: \$$total2")
                             ),
+                            Flexible(
+                              child: Text("After Cash Sales: \$$totalAfterCS2")
+                            )
                           ],
                         ),
                         ElevatedButton(
                           onPressed: () async {
                             try {
                               checkReg2(penniVal, nickeVal, dimesVal, quartVal, 
-                                onesVal, fiveVal, tensVal, twenVal, extraVal);
+                                onesVal, fiveVal, tensVal, twenVal, extraVal, cashSales2.text);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text("Updated Register 2 Log"),
@@ -1095,6 +1182,7 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                                   Text('Extra: ${reg1['extra']}'),
                                   Text('Status: ${reg1['status']}'),
                                   Text('Total: \$${reg1['total']?.toStringAsFixed(2)}'),
+                                  Text('Cash Sales: \$${reg1['cashSales']?.toStringAsFixed(2)}'),
                                 ],
                               ),
                             ],
@@ -1147,6 +1235,7 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                                   Text('Extra: ${reg2['extra']}'),
                                   Text('Status: ${reg2['status']}'),
                                   Text('Total: \$${reg2['total']?.toStringAsFixed(2)}'),
+                                  Text('Cash Sales: \$${reg2['cashSales']?.toStringAsFixed(2)}'),
                                 ],
                               ),
                             ],
