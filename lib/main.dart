@@ -197,6 +197,8 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
   late TextEditingController twent2 = TextEditingController();  
   late TextEditingController extra = TextEditingController();
   late TextEditingController extra2 = TextEditingController();
+  late TextEditingController cashSales = TextEditingController();
+  late TextEditingController cashSales2 = TextEditingController();
   
   String penniVal = "0.00";
   String nickeVal = "0.00";
@@ -218,6 +220,8 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
   String extraVal2 = "0.00";
   String total = "0.00";
   String total2 = "0.00";
+  String cashSalesVal = "0.00";
+  String cashSalesVal2 = "0.00";
 
   // final _future = getReg1();
 
@@ -688,7 +692,7 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                           ],
                         ),
                         ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             try {
                               checkReg1(penniVal, nickeVal, dimesVal, quartVal, 
                                 onesVal, fiveVal, tensVal, twenVal, extraVal);
@@ -1025,7 +1029,7 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                           ],
                         ),
                         ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             try {
                               checkReg2(penniVal, nickeVal, dimesVal, quartVal, 
                                 onesVal, fiveVal, tensVal, twenVal, extraVal);
@@ -1056,38 +1060,49 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                       return const Center(child: CircularProgressIndicator());
                     }
                     final reg1Data = snapshot.data!;
-                    return ListView.builder(
-                      itemCount: reg1Data.length,
-                      itemBuilder: ((context, index) {
-                        final reg1 = reg1Data[index];
 
-                        final dateTime = DateTime.parse(reg1['dateTime']);
-                        final formattedDate = '${dateTime.month}/${dateTime.day}/${dateTime.year}'
-                        ' - ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString()}';
-                        
-
-                        return Column(
-                          children: [
-                            ExpansionTile(
-                              title: Text("$formattedDate"),
-                              children: [
-                                Text('Pennies: ${reg1['pennies']}'),
-                                Text('Nickels: ${reg1['nickels']}'),
-                                Text('Dimes: ${reg1['dimes']}'),
-                                Text('Quarters: ${reg1['quarters']}'),
-                                Text('Ones: ${reg1['ones']}'),
-                                Text('Fives: ${reg1['fives']}'),
-                                Text('Tens: ${reg1['tens']}'),
-                                Text('Twenties: ${reg1['twenties']}'),
-                                Text('Extra: ${reg1['extra']}'),
-                                Text('Status: ${reg1['status']}'),
-                                Text('Total: \$${reg1['total']?.toStringAsFixed(2)}'),
-                              ],
-                            ),
-                          ],
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        updateList1();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Refreshed Register 1 Log"),
+                          ),
                         );
-                      }),
-                    );
+                      },
+                      child: ListView.builder(
+                        itemCount: reg1Data.length,
+                        itemBuilder: ((context, index) {
+                          final reg1 = reg1Data[index];
+
+                          final dateTime = DateTime.parse(reg1['dateTime']);
+                          final formattedDate = '${dateTime.month}/${dateTime.day}/${dateTime.year}'
+                          ' - ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
+                          
+                          return Column(
+                            children: [
+                              ExpansionTile(
+                                title: Text(formattedDate),
+                                children: [
+                                  Text('Pennies: ${reg1['pennies']}'),
+                                  Text('Nickels: ${reg1['nickels']}'),
+                                  Text('Dimes: ${reg1['dimes']}'),
+                                  Text('Quarters: ${reg1['quarters']}'),
+                                  Text('Ones: ${reg1['ones']}'),
+                                  Text('Fives: ${reg1['fives']}'),
+                                  Text('Tens: ${reg1['tens']}'),
+                                  Text('Twenties: ${reg1['twenties']}'),
+                                  Text('Extra: ${reg1['extra']}'),
+                                  Text('Status: ${reg1['status']}'),
+                                  Text('Total: \$${reg1['total']?.toStringAsFixed(2)}'),
+                                ],
+                              ),
+                            ],
+                          );
+                        }),
+                        physics: const AlwaysScrollableScrollPhysics(),
+                      ),
+                    ); 
                   },
                 ),
                 FutureBuilder<List<Map<String, dynamic>>>(
@@ -1097,37 +1112,47 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                       return const Center(child: CircularProgressIndicator());
                     }
                     final reg2Data = snapshot.data!;
-                    return ListView.builder(
-                      itemCount: reg2Data.length,
-                      itemBuilder: ((context, index) {
-                        final reg2 = reg2Data[index];
-
-                        final dateTime = DateTime.parse(reg2['dateTime']);
-                        final formattedDate = '${dateTime.month}/${dateTime.day}/${dateTime.year}'
-                        ' - ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString()}';
-                        
-
-                        return Column(
-                          children: [
-                            ExpansionTile(
-                              title: Text("$formattedDate"),
-                              children: [
-                                Text('Pennies: ${reg2['pennies']}'),
-                                Text('Nickels: ${reg2['nickels']}'),
-                                Text('Dimes: ${reg2['dimes']}'),
-                                Text('Quarters: ${reg2['quarters']}'),
-                                Text('Ones: ${reg2['ones']}'),
-                                Text('Fives: ${reg2['fives']}'),
-                                Text('Tens: ${reg2['tens']}'),
-                                Text('Twenties: ${reg2['twenties']}'),
-                                Text('Extra: ${reg2['extra']}'),
-                                Text('Status: ${reg2['status']}'),
-                                Text('Total: \$${reg2['total']?.toStringAsFixed(2)}'),
-                              ],
-                            ),
-                          ],
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        updateList2();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Refreshed Register 2 Log"),
+                          ),
                         );
-                      }),
+                      },
+                      child: ListView.builder(
+                        itemCount: reg2Data.length,
+                        itemBuilder: ((context, index) {
+                          final reg2 = reg2Data[index];
+
+                          final dateTime = DateTime.parse(reg2['dateTime']);
+                          final formattedDate = '${dateTime.month}/${dateTime.day}/${dateTime.year}'
+                          ' - ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
+                          
+
+                          return Column(
+                            children: [
+                              ExpansionTile(
+                                title: Text(formattedDate),
+                                children: [
+                                  Text('Pennies: ${reg2['pennies']}'),
+                                  Text('Nickels: ${reg2['nickels']}'),
+                                  Text('Dimes: ${reg2['dimes']}'),
+                                  Text('Quarters: ${reg2['quarters']}'),
+                                  Text('Ones: ${reg2['ones']}'),
+                                  Text('Fives: ${reg2['fives']}'),
+                                  Text('Tens: ${reg2['tens']}'),
+                                  Text('Twenties: ${reg2['twenties']}'),
+                                  Text('Extra: ${reg2['extra']}'),
+                                  Text('Status: ${reg2['status']}'),
+                                  Text('Total: \$${reg2['total']?.toStringAsFixed(2)}'),
+                                ],
+                              ),
+                            ],
+                          );
+                        }),
+                      )
                     );
                   },
                 ),
