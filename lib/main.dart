@@ -129,7 +129,7 @@ Future<void> sendReg1(String penniVal, String nickeVal, String dimesVal,
         'extra_bills': double.parse(extraVal),
         'Status': isExact,
         'total': sum,
-        'cashSales': double.parse(cashSalesVal),
+        'cashSales': double.parse(cashSalesVal.substring(1)),
       });
 }
 
@@ -173,7 +173,7 @@ Future<void> sendReg2(String penniVal, String nickeVal, String dimesVal,
         'extra_bills': double.parse(extraVal),
         'Status': isExact,
         'total': sum,
-        'cashSales': double.parse(cashSalesVal),
+        'cashSales': double.parse(cashSalesVal.substring(1)),
       });
 }
 
@@ -205,8 +205,8 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
   late TextEditingController twent2 = TextEditingController();  
   late TextEditingController extra = TextEditingController();
   late TextEditingController extra2 = TextEditingController();
-  late TextEditingController cashSales = TextEditingController();
-  late TextEditingController cashSales2 = TextEditingController();
+  late TextEditingController cashSales = TextEditingController(text: "\$0");
+  late TextEditingController cashSales2 = TextEditingController(text: "\$0");
   
   String penniVal = "0.00";
   String nickeVal = "0.00";
@@ -316,9 +316,9 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
       }
 
       total = findSum(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, 
-        tensVal, twenVal, extraVal).toString();
+        tensVal, twenVal, extraVal).toStringAsFixed(2);
       total2 = findSum(penniVal2, nickeVal2, dimesVal2, quartVal2, onesVal2, 
-        fiveVal2, tensVal2, twenVal2, extraVal2).toString();
+        fiveVal2, tensVal2, twenVal2, extraVal2).toStringAsFixed(2);
 
       calcCashSales1(total, cashSales.text);
       calcCashSales2(total2, cashSales2.text);
