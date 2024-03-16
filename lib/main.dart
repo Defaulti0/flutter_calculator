@@ -4,8 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
-
-
 Future<void> main() async {
   await Supabase.initialize(
     url: 'https://gcsoenjtznqmxcmakolu.supabase.co',
@@ -328,14 +326,18 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
   }
 
   void calcCashSales1(String tCashVal, String csInput){
+    String cleanedCsInput = csInput.replaceAll(RegExp(r'[^\d.]'), ''); 
+
     setState(() {
-      totalAfterCS = (double.parse(tCashVal) - double.parse(csInput)).toString();
+      totalAfterCS = (double.parse(tCashVal) - double.parse(cleanedCsInput)).toStringAsFixed(2);
     });
   }
 
   void calcCashSales2(String tCashVal, String csInput){
+    String cleanedCsInput = csInput.replaceAll(RegExp(r'[^\d.]'), ''); 
+
     setState(() {
-      totalAfterCS2 = (double.parse(tCashVal) - double.parse(csInput)).toStringAsFixed(2);
+      totalAfterCS2 = (double.parse(tCashVal) - double.parse(cleanedCsInput)).toStringAsFixed(2);
     });
   }
 
@@ -795,18 +797,22 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
-                                  hintText: '\$0.00',
+                                  hintText: '0.00',
                                 ),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly
+                                  CurrencyTextInputFormatter(
+                                    locale: 'en_US',
+                                    symbol:'\$',
+                                    decimalDigits: 2,
+                                  ),
                                 ],
                                 controller: cashSales2,
                                 onChanged: (String value) async {
-                                  if (cashSales.text == ""){
-                                    calcCashSales1(total2, "0");
+                                  if (cashSales2.text == ""){
+                                    calcCashSales2(total, "0");
                                   } else {
-                                    calcCashSales1(total2, cashSales2.text);
+                                    calcCashSales2(total, cashSales2.text.substring(1));
                                   }
                                 },
                               ),
