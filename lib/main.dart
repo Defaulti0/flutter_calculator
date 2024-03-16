@@ -203,8 +203,8 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
   late TextEditingController fives2 = TextEditingController();
   late TextEditingController tens2 = TextEditingController();
   late TextEditingController twent2 = TextEditingController();  
-  late TextEditingController extra = TextEditingController();
-  late TextEditingController extra2 = TextEditingController();
+  late TextEditingController extra = TextEditingController(text: "0");
+  late TextEditingController extra2 = TextEditingController(text: "0");
   late TextEditingController cashSales = TextEditingController(text: "\$0");
   late TextEditingController cashSales2 = TextEditingController(text: "\$0");
   
