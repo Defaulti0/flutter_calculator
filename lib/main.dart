@@ -1130,8 +1130,8 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                         ElevatedButton(
                           onPressed: () async {
                             try {
-                              checkReg2(penniVal, nickeVal, dimesVal, quartVal, 
-                                onesVal, fiveVal, tensVal, twenVal, extraVal, cashSales2.text);
+                              checkReg2(penniVal2, nickeVal2, dimesVal2, quartVal2, 
+                                onesVal2, fiveVal2, tensVal2, twenVal2, extraVal2, cashSales2.text);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text("Updated Register 2 Log"),
