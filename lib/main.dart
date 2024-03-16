@@ -1230,7 +1230,6 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                           final formattedDate = '${dateTime.month}/${dateTime.day}/${dateTime.year}'
                           ' - ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
                           
-
                           return Column(
                             children: [
                               ExpansionTile(
