@@ -203,8 +203,8 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
   late TextEditingController fives2 = TextEditingController();
   late TextEditingController tens2 = TextEditingController();
   late TextEditingController twent2 = TextEditingController();  
-  late TextEditingController extra = TextEditingController();
-  late TextEditingController extra2 = TextEditingController();
+  late TextEditingController extra = TextEditingController(text: "0");
+  late TextEditingController extra2 = TextEditingController(text: "0");
   late TextEditingController cashSales = TextEditingController(text: "\$0");
   late TextEditingController cashSales2 = TextEditingController(text: "\$0");
   
@@ -1130,8 +1130,8 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                         ElevatedButton(
                           onPressed: () async {
                             try {
-                              checkReg2(penniVal, nickeVal, dimesVal, quartVal, 
-                                onesVal, fiveVal, tensVal, twenVal, extraVal, cashSales2.text);
+                              checkReg2(penniVal2, nickeVal2, dimesVal2, quartVal2, 
+                                onesVal2, fiveVal2, tensVal2, twenVal2, extraVal2, cashSales2.text);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text("Updated Register 2 Log"),
@@ -1230,7 +1230,6 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                           final formattedDate = '${dateTime.month}/${dateTime.day}/${dateTime.year}'
                           ' - ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}';
                           
-
                           return Column(
                             children: [
                               ExpansionTile(
