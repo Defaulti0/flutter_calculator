@@ -3,6 +3,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:intl/intl.dart';
 
 Future<void> main() async {
   await Supabase.initialize(
@@ -14,6 +15,9 @@ Future<void> main() async {
     const RegCalc()
   );
 }
+
+// Format currency used in strings
+final oCcy = new NumberFormat("#,##0.00", "en_US");
 
 // Get a reference your Supabase client
 final supabase = Supabase.instance.client;
@@ -1183,15 +1187,15 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                               ExpansionTile(
                                 title: Text(formattedDate),
                                 children: [
-                                  Text('Pennies: ${reg1['pennies']}'),
-                                  Text('Nickels: ${reg1['nickels']}'),
-                                  Text('Dimes: ${reg1['dimes']}'),
-                                  Text('Quarters: ${reg1['quarters']}'),
-                                  Text('Ones: ${reg1['ones']}'),
-                                  Text('Fives: ${reg1['fives']}'),
-                                  Text('Tens: ${reg1['tens']}'),
-                                  Text('Twenties: ${reg1['twenties']}'),
-                                  Text('Extra: ${reg1['extra']}'),
+                                  Text('Pennies: \$${oCcy.format(reg1['pennies'])}'),
+                                  Text('Nickels: \$${oCcy.format(reg1['nickels'])}'),
+                                  Text('Dimes: \$${oCcy.format(reg1['dimes'])}'),
+                                  Text('Quarters: \$${oCcy.format(reg1['quarters'])}'),
+                                  Text('Ones: \$${oCcy.format(reg1['ones'])}'),
+                                  Text('Fives: \$${oCcy.format(reg1['fives'])}'),
+                                  Text('Tens: \$${oCcy.format(reg1['tens'])}'),
+                                  Text('Twenties: \$${oCcy.format(reg1['twenties'])}'),
+                                  Text('Extra: \$${oCcy.format(reg1['extra'])}'),
                                   Text('Status: ${reg1['status']}'),
                                   Text('Total: \$${reg1['total']?.toStringAsFixed(2)}'),
                                   Text('Cash Sales: \$${reg1['cashSales']?.toStringAsFixed(2)}'),
@@ -1235,15 +1239,15 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                               ExpansionTile(
                                 title: Text(formattedDate),
                                 children: [
-                                  Text('Pennies: ${reg2['pennies']}'),
-                                  Text('Nickels: ${reg2['nickels']}'),
-                                  Text('Dimes: ${reg2['dimes']}'),
-                                  Text('Quarters: ${reg2['quarters']}'),
-                                  Text('Ones: ${reg2['ones']}'),
-                                  Text('Fives: ${reg2['fives']}'),
-                                  Text('Tens: ${reg2['tens']}'),
-                                  Text('Twenties: ${reg2['twenties']}'),
-                                  Text('Extra: ${reg2['extra']}'),
+                                  Text('Pennies: \$${oCcy.format(reg2['pennies'])}'),
+                                  Text('Nickels: \$${oCcy.format(reg2['nickels'])}'),
+                                  Text('Dimes: \$${oCcy.format(reg2['dimes'])}'),
+                                  Text('Quarters: \$${oCcy.format(reg2['quarters'])}'),
+                                  Text('Ones: \$${oCcy.format(reg2['ones'])}'),
+                                  Text('Fives: \$${oCcy.format(reg2['fives'])}'),
+                                  Text('Tens: \$${oCcy.format(reg2['tens'])}'),
+                                  Text('Twenties: \$${oCcy.format(reg2['twenties'])}'),
+                                  Text('Extra: \$${oCcy.format(reg2['extra'])}'),
                                   Text('Status: ${reg2['status']}'),
                                   Text('Total: \$${reg2['total']?.toStringAsFixed(2)}'),
                                   Text('Cash Sales: \$${reg2['cashSales']?.toStringAsFixed(2)}'),
