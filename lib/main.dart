@@ -17,7 +17,7 @@ Future<void> main() async {
 }
 
 // Format currency used in strings
-final oCcy = new NumberFormat("#,##0.00", "en_US");
+final oCcy = NumberFormat("#,##0.00", "en_US");
 
 // Get a reference your Supabase client
 final supabase = Supabase.instance.client;
@@ -130,8 +130,8 @@ Future<void> sendReg1(String penniVal, String nickeVal, String dimesVal,
         'fives': double.parse(fiveVal),
         'tens': double.parse(tensVal),
         'twenties': double.parse(twenVal),
-        'extra_bills': double.parse(extraVal),
-        'Status': isExact,
+        'extra': double.parse(extraVal),
+        'status': isExact,
         'total': sum,
         'cashSales': double.parse(cashSalesVal.substring(1)),
       });
@@ -174,8 +174,8 @@ Future<void> sendReg2(String penniVal, String nickeVal, String dimesVal,
         'fives': double.parse(fiveVal),
         'tens': double.parse(tensVal),
         'twenties': double.parse(twenVal),
-        'extra_bills': double.parse(extraVal),
-        'Status': isExact,
+        'extra': double.parse(extraVal),
+        'status': isExact,
         'total': sum,
         'cashSales': double.parse(cashSalesVal.substring(1)),
       });
