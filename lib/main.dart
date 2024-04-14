@@ -725,11 +725,15 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
-                                  hintText: '\$ Extras',
+                                  hintText: '0.00',
                                 ),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly
+                                  CurrencyTextInputFormatter(
+                                    locale: 'en_US',
+                                    symbol:'\$',
+                                    decimalDigits: 2,
+                                  ),
                                 ],
                                 controller: extra,
                                 onChanged: (String value) async {
@@ -1098,11 +1102,15 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
                               child: TextFormField(
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
-                                  hintText: '\$ Extras',
+                                  hintText: '0.00',
                                 ),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: <TextInputFormatter>[
-                                  FilteringTextInputFormatter.digitsOnly
+                                  CurrencyTextInputFormatter(
+                                    locale: 'en_US',
+                                    symbol:'\$',
+                                    decimalDigits: 2,
+                                  ),
                                 ],
                                 controller: extra2,
                                 onChanged: (String value) async {
