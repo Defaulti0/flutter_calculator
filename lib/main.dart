@@ -152,7 +152,7 @@ Future<void> sendReg1(
     'fives': double.parse(fiveVal),
     'tens': double.parse(tensVal),
     'twenties': double.parse(twenVal),
-    'extra': double.parse(extraVal.substring(1)),
+    'extra': double.parse(extraVal),
     'status': isExact,
     'total': sum,
     'cashSales': double.parse(cashSalesVal.substring(1)),
@@ -210,7 +210,7 @@ Future<void> sendReg2(
     'fives': double.parse(fiveVal),
     'tens': double.parse(tensVal),
     'twenties': double.parse(twenVal),
-    'extra': double.parse(extraVal.substring(1)),
+    'extra': double.parse(extraVal),
     'status': isExact,
     'total': sum,
     'cashSales': double.parse(cashSalesVal.substring(1)),
@@ -242,8 +242,8 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
   late TextEditingController fives2 = TextEditingController();
   late TextEditingController tens2 = TextEditingController();
   late TextEditingController twent2 = TextEditingController();
-  late TextEditingController extra = TextEditingController(text: "0");
-  late TextEditingController extra2 = TextEditingController(text: "0");
+  late TextEditingController extra = TextEditingController(text: "\$0");
+  late TextEditingController extra2 = TextEditingController(text: "\$0");
   late TextEditingController cashSales = TextEditingController(text: "\$0");
   late TextEditingController cashSales2 = TextEditingController(text: "\$0");
 
