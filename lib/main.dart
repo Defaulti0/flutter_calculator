@@ -70,6 +70,7 @@ class RegState extends State<RegMain> with SingleTickerProviderStateMixin{
               return TabBarView(
                 controller: tabController,
                 children: [
+                  // TO-DO: These children should return 2 functions instead of bodies.
                   SingleChildScrollView(
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height,
