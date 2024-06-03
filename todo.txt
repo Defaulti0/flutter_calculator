@@ -1,0 +1,12 @@
+1. Re-do code for the app following SOLID principles
+  i. Separate the tabs into their own .dart files
+  ii. Minimize main.dart usage
+  iii. Reduce redundancy in code
+  iv. Reduce code dependency between files
+  v. Add data validation
+2. Rearrange the UI
+  i. Make the layout consistent (i.e. spacing, widths, etc)
+3. Implement Firebase backend
+  i. Firestore Collections
+  ii. Firestore Auth(?)
+
