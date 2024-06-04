@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:register_calculator/register_log.dart';
@@ -135,8 +133,6 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
   String total = "0.00";
   String cashSalesVal = "0.00";
   String totalAfterCS = "0.00";
-
-  var regVals = [];
 
   void calcCashSales1(String tCashVal, String csInput) {
     String cleanedCsInput = csInput.replaceAll(RegExp(r'[^\d.]'), '');
