@@ -59,6 +59,7 @@ double findSum(
     String tensVal,
     String twenVal,
     String extraVal) {
+
   return double.parse(penniVal) +
       double.parse(nickeVal) +
       double.parse(dimesVal) +
@@ -94,8 +95,13 @@ void checkReg1(
     isExact = "Correct";
   }
 
-  sendReg1(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, tensVal,
-      twenVal, extraVal, isExact, sum, cSales);
+  if (sum == 0){
+    // do nothing
+  } else {
+    sendReg1(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, tensVal,
+        twenVal, extraVal, isExact, sum, cSales);
+  }
+
 }
 
 Future<void> sendReg1(
