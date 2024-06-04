@@ -230,21 +230,21 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
   late TextEditingController dimes = TextEditingController();
   late TextEditingController nickl = TextEditingController();
   late TextEditingController quart = TextEditingController();
-  late TextEditingController penni2 = TextEditingController();
-  late TextEditingController dimes2 = TextEditingController();
-  late TextEditingController nickl2 = TextEditingController();
-  late TextEditingController quart2 = TextEditingController();
   late TextEditingController ones = TextEditingController();
   late TextEditingController fives = TextEditingController();
   late TextEditingController tens = TextEditingController();
   late TextEditingController twents = TextEditingController();
+  late TextEditingController extra = TextEditingController(text: "\$0");
+  late TextEditingController cashSales = TextEditingController(text: "\$0");
+  late TextEditingController penni2 = TextEditingController();
+  late TextEditingController dimes2 = TextEditingController();
+  late TextEditingController nickl2 = TextEditingController();
+  late TextEditingController quart2 = TextEditingController();
   late TextEditingController ones2 = TextEditingController();
   late TextEditingController fives2 = TextEditingController();
   late TextEditingController tens2 = TextEditingController();
   late TextEditingController twent2 = TextEditingController();
-  late TextEditingController extra = TextEditingController(text: "\$0");
   late TextEditingController extra2 = TextEditingController(text: "\$0");
-  late TextEditingController cashSales = TextEditingController(text: "\$0");
   late TextEditingController cashSales2 = TextEditingController(text: "\$0");
 
   String penniVal = "0.00";
@@ -255,6 +255,10 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
   String fiveVal = "0.00";
   String tensVal = "0.00";
   String twenVal = "0.00";
+  String extraVal = "0.00";
+  String total = "0.00";
+  String cashSalesVal = "0.00";
+  String totalAfterCS = "0.00";
   String penniVal2 = "0.00";
   String nickeVal2 = "0.00";
   String dimesVal2 = "0.00";
@@ -263,13 +267,9 @@ class _RegCalcState extends State<RegCalc> with SingleTickerProviderStateMixin {
   String fiveVal2 = "0.00";
   String tensVal2 = "0.00";
   String twenVal2 = "0.00";
-  String extraVal = "0.00";
   String extraVal2 = "0.00";
-  String total = "0.00";
   String total2 = "0.00";
-  String cashSalesVal = "0.00";
   String cashSalesVal2 = "0.00";
-  String totalAfterCS = "0.00";
   String totalAfterCS2 = "0.00";
 
   @override
