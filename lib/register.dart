@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:register_calculator/register_log.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:intl/intl.dart';
 
 
 class Register extends StatefulWidget {
@@ -16,75 +17,25 @@ class Register extends StatefulWidget {
 // Get a reference your Supabase client
 final supabase = Supabase.instance.client;
 
-// Need to condense into a single function(?)
-double calcPenny(int inputPenny) {
-  return inputPenny * 0.01;
+NumberFormat doubleFormat = NumberFormat.decimalPatternDigits(
+  locale: 'en_US', decimalDigits: 2);
+
+double findSum(List registerList) {
+  var sum = 0.0;
+  registerList[10] = 0.0;
+
+  for (var i = 0; i < registerList.length - 1; i++){
+    sum += registerList[i];
+  }
+
+  return sum;
 }
 
-double calcNickel(int inputNickel) {
-  return inputNickel * 0.05;
-}
-
-double calcDime(int inputDime) {
-  return inputDime * 0.10;
-}
-
-double calcQuarter(int inputQuarter) {
-  return inputQuarter * 0.25;
-}
-
-double calcOne(int inputOne) {
-  return inputOne * 1;
-}
-
-double calcFive(int inputFive) {
-  return inputFive * 5;
-}
-
-double calcTen(int inputTen) {
-  return inputTen * 10;
-}
-
-double calcTwenty(int inputTwenty) {
-  return inputTwenty * 20;
-}
-
-double findSum(
-    String penniVal,
-    String nickeVal,
-    String dimesVal,
-    String quartVal,
-    String onesVal,
-    String fiveVal,
-    String tensVal,
-    String twenVal,
-    String extraVal) {
-  return double.parse(penniVal) +
-      double.parse(nickeVal) +
-      double.parse(dimesVal) +
-      double.parse(quartVal) +
-      double.parse(onesVal) +
-      double.parse(fiveVal) +
-      double.parse(tensVal) +
-      double.parse(twenVal) +
-      double.parse(extraVal);
-}
-
-void checkReg1(
-    String penniVal,
-    String nickeVal,
-    String dimesVal,
-    String quartVal,
-    String onesVal,
-    String fiveVal,
-    String tensVal,
-    String twenVal,
-    String extraVal,
-    String cSales) {
+void checkReg1(List registerList, String cashSales) {
+  
   double regConst = 317.50;
   String isExact = "";
-  double sum = findSum(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal,
-      tensVal, twenVal, extraVal);
+  double sum = findSum(registerList);
 
   if (sum > regConst) {
     isExact = "Over";
@@ -94,52 +45,65 @@ void checkReg1(
     isExact = "Correct";
   }
 
-  sendReg1(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal, tensVal,
-      twenVal, extraVal, isExact, sum, cSales);
+  sendReg1(registerList, isExact, sum, cashSales);
 }
 
-Future<void> sendReg1(
-    String penniVal, String nickeVal, String dimesVal, String quartVal,
-    String onesVal, String fiveVal, String tensVal, String twenVal,
-    String extraVal, String isExact, double sum, String cashSalesVal
-    ) async {
+Future<void> sendReg1(List registerList, String isExact, double totalSum,
+String cashSales) async {
   await supabase.from('register1').insert({
-    'dateTime': DateTime.now().toIso8601String(),
-    'pennies': double.parse(penniVal),
-    'nickels': double.parse(nickeVal),
-    'dimes': double.parse(dimesVal),
-    'quarters': double.parse(quartVal),
-    'ones': double.parse(onesVal),
-    'fives': double.parse(fiveVal),
-    'tens': double.parse(tensVal),
-    'twenties': double.parse(twenVal),
-    'extra': double.parse(extraVal),
-    'status': isExact,
-    'total': sum,
-    'cashSales': double.parse(cashSalesVal.substring(1)),
+    'Date': DateTime.now().toIso8601String(),
+    'Pennies': registerList[7],
+    'Nickels': registerList[5],
+    'Dimes': registerList[6],
+    'Quarters': registerList[4],
+    'Ones': registerList[3],
+    'Fives': registerList[2],
+    'Tens': registerList[1],
+    'Twenties': registerList[0],
+    'Extra': registerList[8],
+    'Status': isExact,
+    'Total': totalSum,
+    'CashSales': double.parse(cashSales.substring(1)),
   });
 }
 
 class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
-  String penniVal = "0.00";
-  String nickeVal = "0.00";
-  String dimesVal = "0.00";
-  String quartVal = "0.00";
-  String onesVal = "0.00";
-  String fiveVal = "0.00";
-  String tensVal = "0.00";
-  String twenVal = "0.00";
-  String extraVal = "0.00";
-  String total = "0.00";
-  String cashSalesVal = "0.00";
-  String totalAfterCS = "0.00";
+  /*
+    Initial list which contains float values for individual denominations,
+      the list is as follows:
+    0: twenties
+    1: tens
+    2: fives
+    3: ones
+    4: quarters
+    5: nickels
+    6: dimes
+    7: pennies
+    8: extra money
+    9: cash sales
+    10: total value (sum of 0-8)
+    11: total value after cash sales (10 - 9)
+  */
+  var regList = [
+      0.00, 
+      0.00,
+      0.00, 
+      0.00,
+      0.00, 
+      0.00,
+      0.00, 
+      0.00,
+      0.00, 
+      0.00,
+      0.00,
+      0.00,
+    ];
 
-  void calcCashSales1(String tCashVal, String csInput) {
+  void calcCashSales1(double tCashVal, String csInput) {
     String cleanedCsInput = csInput.replaceAll(RegExp(r'[^\d.]'), '');
 
     setState(() {
-      totalAfterCS = (double.parse(tCashVal) - double.parse(cleanedCsInput))
-          .toStringAsFixed(2);
+      regList[11] = (tCashVal - double.parse(cleanedCsInput));
     });
   }
 
@@ -156,17 +120,16 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
   late TextEditingController extra = TextEditingController(text: "\$0");
   late TextEditingController cashSales = TextEditingController(text: "\$0");
 
+  late List<TextEditingController> textEditList = [
+    TextEditingController(text: "\$0"),
+  ];
+
+
   @override
   void dispose() {
-    penni.dispose();
-    dimes.dispose();
-    nickl.dispose();
-    quart.dispose();
-    ones.dispose();
-    fives.dispose();
-    tens.dispose();
-    twents.dispose();
-    extra.dispose();
+    for (var i = 0; i < textEditList.length - 1; i++){
+      textEditList[i].dispose();
+    }
     super.dispose();
   }
 
@@ -174,39 +137,37 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
     setState(() {
       switch (currType) {
         case 0:
-          penniVal = calcPenny(int.parse(textController)).toStringAsFixed(2);
+          regList[7] = double.parse(textController) * 0.01;
           break;
         case 1:
-          nickeVal = calcNickel(int.parse(textController)).toStringAsFixed(2);
+          regList[5] = double.parse(textController) * 0.05;
           break;
         case 2:
-          dimesVal = calcDime(int.parse(textController)).toStringAsFixed(2);
+          regList[6] = double.parse(textController) * 0.10;
           break;
         case 3:
-          quartVal = calcQuarter(int.parse(textController)).toStringAsFixed(2);
+          regList[4] = double.parse(textController) * 0.25;
           break;
         case 4:
-          onesVal = calcOne(int.parse(textController)).toStringAsFixed(2);
+          regList[3] = double.parse(textController) * 1;
           break;
         case 5:
-          fiveVal = calcFive(int.parse(textController)).toStringAsFixed(2);
+          regList[2] = double.parse(textController) * 5;
           break;
         case 6:
-          tensVal = calcTen(int.parse(textController)).toStringAsFixed(2);
+          regList[1] = double.parse(textController) * 10;
           break;
         case 7:
-          twenVal = calcTwenty(int.parse(textController)).toStringAsFixed(2);
+          regList[0] = double.parse(textController) * 20;
           break;
         case 16:
-          extraVal = textController;
+          regList[8] = textController as double;
           break;
       }
 
-      total = findSum(penniVal, nickeVal, dimesVal, quartVal, onesVal, fiveVal,
-              tensVal, twenVal, extraVal)
-          .toStringAsFixed(2);
+      regList[10] = findSum(regList);
 
-      calcCashSales1(total, cashSales.text);
+      calcCashSales1(regList[10], cashSales.text);
     });
   }
   
@@ -219,13 +180,14 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Text("Cash Sales:"),
                 ),
-                Expanded(
+                Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -242,10 +204,9 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     controller: cashSales,
                     onChanged: (String value) async {
                       if (cashSales.text == "") {
-                        calcCashSales1(total, "0");
+                        calcCashSales1(regList[10], "0");
                       } else {
-                        calcCashSales1(
-                            total, cashSales.text.substring(1));
+                        calcCashSales1(regList[10], cashSales.text.substring(1));
                       }
                     },
                   ),
@@ -253,13 +214,14 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Text("Quarters: "),
                 ),
-                Expanded(
+                Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -279,20 +241,17 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     },
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Text("Result: \$$quartVal"),
-                ),
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Text("Dimes: "),
                 ),
-                Expanded(
+                Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -312,20 +271,17 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     },
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Text("Result: \$$dimesVal"),
-                ),
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Text("Nickels: "),
                 ),
-                Expanded(
+                Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -345,20 +301,17 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     },
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Text("Result: \$$nickeVal"),
-                ),
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Text("Pennies: "),
                 ),
-                Expanded(
+                Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -378,20 +331,17 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     },
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Text("Result: \$$penniVal"),
-                ),
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Text("Twenties: "),
                 ),
-                Expanded(
+                Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -411,20 +361,17 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     },
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Text("Result: \$$twenVal"),
-                ),
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Text("Tens: "),
                 ),
-                Expanded(
+                Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -444,20 +391,17 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     },
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Text("Result: \$$tensVal"),
-                ),
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Text("Fives: "),
                 ),
-                Expanded(
+                Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -477,20 +421,17 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     },
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Text("Result: \$$fiveVal"),
-                ),
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Text("Ones: "),
                 ),
-                Expanded(
+                Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -510,20 +451,17 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     },
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Text("Result: \$$onesVal"),
-                ),
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: Text("Extra Money: "),
                 ),
-                Expanded(
+                Flexible(
+                  flex: 1,
                   child: TextFormField(
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -547,35 +485,26 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
                     },
                   ),
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Text("Result: \$$extraVal"),
-                ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Flexible(child: Text("Total: \$$total")),
+                Flexible(child: Text(
+                    "Total: \$${doubleFormat.format(regList[10])}"
+                  )
+                ),
                 Flexible(
-                    child:
-                        Text("After Cash Sales: \$$totalAfterCS"))
+                  child: Text(
+                    "After Cash Sales: \$${doubleFormat.format(regList[11])}"
+                  )
+                ),
               ],
             ),
             ElevatedButton(
               onPressed: () async {
                 try {
-                  checkReg1(
-                      penniVal,
-                      nickeVal,
-                      dimesVal,
-                      quartVal,
-                      onesVal,
-                      fiveVal,
-                      tensVal,
-                      twenVal,
-                      extraVal,
-                      cashSales.text);
+                  checkReg1( regList, cashSales.text);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Updated Register 1 Log"),
