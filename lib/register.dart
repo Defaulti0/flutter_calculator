@@ -45,7 +45,7 @@ void checkReg1(List registerList, String cashSales) {
     isExact = "Correct";
   }
 
-  if sum = 0{
+  if (sum == 0){
     // do nothing
   } else {
     sendReg1(registerList, isExact, sum, cashSales);
