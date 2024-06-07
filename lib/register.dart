@@ -45,7 +45,11 @@ void checkReg1(List registerList, String cashSales) {
     isExact = "Correct";
   }
 
-  sendReg1(registerList, isExact, sum, cashSales);
+  if sum = 0{
+    // do nothing
+  } else {
+    sendReg1(registerList, isExact, sum, cashSales);
+  }
 }
 
 Future<void> sendReg1(List registerList, String isExact, double totalSum,
