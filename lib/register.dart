@@ -113,6 +113,7 @@ class RegisterState extends State<Register> with SingleTickerProviderStateMixin{
 
   var future1 = getReg1();
 
+  // Want to condense this or at least somehow make it more dynamic?
   late TextEditingController penni = TextEditingController();
   late TextEditingController dimes = TextEditingController();
   late TextEditingController nickl = TextEditingController();
