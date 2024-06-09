@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:register_calculator/register_log.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
