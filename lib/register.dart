@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:register_calculator/main.dart';
 import 'package:register_calculator/register_log.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+// import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:intl/intl.dart';
 
@@ -15,7 +15,10 @@ class Register extends StatefulWidget {
 
 //NOTE: To be replaced with Firestore
 // Get a reference your Supabase client
-final supabase = Supabase.instance.client;
+// final supabase = Supabase.instance.client;
+
+// Get a reference to the Firestore client
+final db = FirebaseFirestore.instance;
 
 NumberFormat doubleFormat =
     NumberFormat.decimalPatternDigits(locale: 'en_US', decimalDigits: 2);
@@ -55,38 +58,71 @@ void checkReg(List registerList, String cashSales, bool isReg1) {
 
 Future<void> sendReg(List registerList, String isExact, double totalSum,
     String cashSales, bool isReg1) async {
+  final docData = {
+    'Date': DateTime.now(),
+    'Pennies': registerList[7],
+    'Nickels': registerList[5],
+    'Dimes': registerList[6],
+    'Quarters': registerList[4],
+    'Ones': registerList[3],
+    'Fives': registerList[2],
+    'Tens': registerList[1],
+    'Twenties': registerList[0],
+    'Extra': registerList[8],
+    'Status': isExact,
+    'Total': totalSum,
+    'CashSales': double.parse(cashSales.substring(1)),
+  };
   if (!isReg1) {
-    await supabase.from('register2').insert({
-      'Date': DateTime.now().toIso8601String(),
-      'Pennies': registerList[7],
-      'Nickels': registerList[5],
-      'Dimes': registerList[6],
-      'Quarters': registerList[4],
-      'Ones': registerList[3],
-      'Fives': registerList[2],
-      'Tens': registerList[1],
-      'Twenties': registerList[0],
-      'Extra': registerList[8],
-      'Status': isExact,
-      'Total': totalSum,
-      'CashSales': double.parse(cashSales.substring(1)),
-    });
+    db
+        .collection("Register_2")
+        .add(docData)
+        .then((documentSnapshot) => debugPrint(
+            "\n\n\nAdded Data with ID: ${documentSnapshot.id}\n\n\n"))
+        .onError(
+            (error, stackTrace) => debugPrint("An error has ocurred: $error"));
+
+    //   await supabase.from('register2').insert({
+    // 'Date': DateTime.now().toIso8601String(),
+    // 'Pennies': registerList[7],
+    // 'Nickels': registerList[5],
+    // 'Dimes': registerList[6],
+    // 'Quarters': registerList[4],
+    // 'Ones': registerList[3],
+    // 'Fives': registerList[2],
+    // 'Tens': registerList[1],
+    // 'Twenties': registerList[0],
+    // 'Extra': registerList[8],
+    // 'Status': isExact,
+    // 'Total': totalSum,
+    // 'CashSales': double.parse(cashSales.substring(1)),
+    //   });
   } else {
-    await supabase.from('register1').insert({
-      'Date': DateTime.now().toIso8601String(),
-      'Pennies': registerList[7],
-      'Nickels': registerList[5],
-      'Dimes': registerList[6],
-      'Quarters': registerList[4],
-      'Ones': registerList[3],
-      'Fives': registerList[2],
-      'Tens': registerList[1],
-      'Twenties': registerList[0],
-      'Extra': registerList[8],
-      'Status': isExact,
-      'Total': totalSum,
-      'CashSales': double.parse(cashSales.substring(1)),
-    });
+    db
+        .collection("Register_1")
+        .add(docData)
+        .then((documentSnapshot) => debugPrint(
+            "\n\n\nAdded Data with ID: ${documentSnapshot.id}\n\n\n"))
+        .onError(
+            (error, stackTrace) => debugPrint("An error has ocurred: $error"));
+    // .onError((error, stackTrace) =>
+    //     debugPrint("error writing document: $error"));
+
+    // await supabase.from('register1').insert({
+    //   'Date': DateTime.now().toIso8601String(),
+    //   'Pennies': registerList[7],
+    //   'Nickels': registerList[5],
+    //   'Dimes': registerList[6],
+    //   'Quarters': registerList[4],
+    //   'Ones': registerList[3],
+    //   'Fives': registerList[2],
+    //   'Tens': registerList[1],
+    //   'Twenties': registerList[0],
+    //   'Extra': registerList[8],
+    //   'Status': isExact,
+    //   'Total': totalSum,
+    //   'CashSales': double.parse(cashSales.substring(1)),
+    // });
   }
 }
 
@@ -130,8 +166,6 @@ class RegisterState extends State<Register>
       regList[11] = (tCashVal - double.parse(cleanedCsInput));
     });
   }
-
-  var future1 = getReg1();
 
   // Want to condense this or at least somehow make it more dynamic?
   late TextEditingController penni = TextEditingController();
@@ -206,306 +240,19 @@ class RegisterState extends State<Register>
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          // mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Row(
-              children: [
-                const Expanded(
-                  child: Center(child: Text("Cash Sales:")),
-                ),
-                Expanded(
-                  child: Center(
-                      child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: '0.00',
-                    ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      CurrencyTextInputFormatter.currency(
-                        locale: 'en_US',
-                        symbol: '\$',
-                        decimalDigits: 2,
-                      ),
-                    ],
-                    controller: cashSales,
-                    onChanged: (String value) async {
-                      if (cashSales.text == "") {
-                        calcCashSales1(regList[10], "0");
-                      } else {
-                        calcCashSales1(
-                            regList[10], cashSales.text.substring(1));
-                      }
-                    },
-                  )),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(
-                  child: Center(
-                    child: Text("Quarters: "),
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Center(child: Text("Cash Sales:")),
                   ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '25¢',
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      controller: quart,
-                      onChanged: (String value) async {
-                        if (quart.text == "") {
-                          updateText("0", 3);
-                        } else {
-                          updateText(quart.text, 3);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(
-                  child: Center(
-                    child: Text("Dimes: "),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '10¢',
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      controller: dimes,
-                      onChanged: (String value) async {
-                        if (dimes.text == "") {
-                          updateText("0", 2);
-                        } else {
-                          updateText(dimes.text, 2);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(
-                  child: Center(
-                    child: Text("Nickels: "),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '5¢',
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      controller: nickl,
-                      onChanged: (String value) async {
-                        if (nickl.text == "") {
-                          updateText("0", 1);
-                        } else {
-                          updateText(nickl.text, 1);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(
-                  child: Center(
-                    child: Text("Pennies: "),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '1¢',
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      controller: penni,
-                      onChanged: (String value) async {
-                        if (penni.text == "") {
-                          updateText("0", 0);
-                        } else {
-                          updateText(penni.text, 0);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(
-                  child: Center(
-                    child: Text("Twenties: "),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '\$20',
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      controller: twents,
-                      onChanged: (String value) async {
-                        if (twents.text == "") {
-                          updateText("0", 7);
-                        } else {
-                          updateText(twents.text, 7);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(
-                  child: Center(
-                    child: Text("Tens: "),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '\$10',
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      controller: tens,
-                      onChanged: (String value) async {
-                        if (tens.text == "") {
-                          updateText("0", 6);
-                        } else {
-                          updateText(tens.text, 6);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(
-                  child: Center(
-                    child: Text("Fives: "),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '\$5',
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      controller: fives,
-                      onChanged: (String value) async {
-                        if (fives.text == "") {
-                          updateText("0", 5);
-                        } else {
-                          updateText(fives.text, 5);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(
-                  child: Center(
-                    child: Text("Ones: "),
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: '\$1',
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      controller: ones,
-                      onChanged: (String value) async {
-                        if (ones.text == "") {
-                          updateText("0", 4);
-                        } else {
-                          updateText(ones.text, 4);
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(
-                  child: Center(child: Text("Extra Money: ")),
-                ),
-                Expanded(
-                  child: Center(
-                    child: TextFormField(
+                  Expanded(
+                    child: Center(
+                        child: TextFormField(
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: '0.00',
@@ -518,75 +265,412 @@ class RegisterState extends State<Register>
                           decimalDigits: 2,
                         ),
                       ],
-                      controller: extra,
+                      controller: cashSales,
                       onChanged: (String value) async {
-                        if (extra.text == "") {
-                          updateText("0", 16);
+                        if (cashSales.text == "") {
+                          calcCashSales1(regList[10], "0");
                         } else {
-                          updateText(extra.text.substring(1), 16);
+                          calcCashSales1(
+                              regList[10], cashSales.text.substring(1));
                         }
                       },
+                    )),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Expanded(
+                    child: Center(
+                      child: Text("Quarters: "),
                     ),
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: Center(
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: '25¢',
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        controller: quart,
+                        onChanged: (String value) async {
+                          if (quart.text == "") {
+                            updateText("0", 3);
+                          } else {
+                            updateText(quart.text, 3);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Flexible(
-                    child:
-                        Text("Total: \$${doubleFormat.format(regList[10])}")),
-                Flexible(
-                    child: Text(
-                        "After Cash Sales: \$${doubleFormat.format(regList[11])}")),
-              ],
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Expanded(
+                    child: Center(
+                      child: Text("Dimes: "),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: '10¢',
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        controller: dimes,
+                        onChanged: (String value) async {
+                          if (dimes.text == "") {
+                            updateText("0", 2);
+                          } else {
+                            updateText(dimes.text, 2);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      checkReg(regList, cashSales.text, true);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Updated Register 1 Log"),
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Expanded(
+                    child: Center(
+                      child: Text("Nickels: "),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: '5¢',
                         ),
-                      );
-                      RegisterLogState().updateList1();
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("An Error Has Occurred"),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        controller: nickl,
+                        onChanged: (String value) async {
+                          if (nickl.text == "") {
+                            updateText("0", 1);
+                          } else {
+                            updateText(nickl.text, 1);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Expanded(
+                    child: Center(
+                      child: Text("Pennies: "),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: '1¢',
                         ),
-                      );
-                    }
-                  },
-                  child: const Text("Submit to Reg 1"),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      checkReg(regList, cashSales.text, false);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Updated Register 2 Log"),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        controller: penni,
+                        onChanged: (String value) async {
+                          if (penni.text == "") {
+                            updateText("0", 0);
+                          } else {
+                            updateText(penni.text, 0);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Expanded(
+                    child: Center(
+                      child: Text("Twenties: "),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: '\$20',
                         ),
-                      );
-                      RegisterLogState().updateList1();
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("An Error Has Occurred"),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        controller: twents,
+                        onChanged: (String value) async {
+                          if (twents.text == "") {
+                            updateText("0", 7);
+                          } else {
+                            updateText(twents.text, 7);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Expanded(
+                    child: Center(
+                      child: Text("Tens: "),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: '\$10',
                         ),
-                      );
-                    }
-                  },
-                  child: const Text("Submit to Reg 2"),
-                ),
-              ],
-            )
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        controller: tens,
+                        onChanged: (String value) async {
+                          if (tens.text == "") {
+                            updateText("0", 6);
+                          } else {
+                            updateText(tens.text, 6);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Expanded(
+                    child: Center(
+                      child: Text("Fives: "),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: '\$5',
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        controller: fives,
+                        onChanged: (String value) async {
+                          if (fives.text == "") {
+                            updateText("0", 5);
+                          } else {
+                            updateText(fives.text, 5);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Expanded(
+                    child: Center(
+                      child: Text("Ones: "),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: '\$1',
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        controller: ones,
+                        onChanged: (String value) async {
+                          if (ones.text == "") {
+                            updateText("0", 4);
+                          } else {
+                            updateText(ones.text, 4);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Expanded(
+                    child: Center(child: Text("Extra Money: ")),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          hintText: '0.00',
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          CurrencyTextInputFormatter.currency(
+                            locale: 'en_US',
+                            symbol: '\$',
+                            decimalDigits: 2,
+                          ),
+                        ],
+                        controller: extra,
+                        onChanged: (String value) async {
+                          if (extra.text == "") {
+                            updateText("0", 16);
+                          } else {
+                            updateText(extra.text.substring(1), 16);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Flexible(
+                      child:
+                          Text("Total: \$${doubleFormat.format(regList[10])}")),
+                  Flexible(
+                      child: Text(
+                          "After Cash Sales: \$${doubleFormat.format(regList[11])}")),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        checkReg(regList, cashSales.text, true);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Updated Register 1 Log"),
+                          ),
+                        );
+                        // RegisterLogState().updateList(true);
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("An Error Has Occurred"),
+                          ),
+                        );
+                      }
+                      dispose();
+                    },
+                    child: const Text("Submit to Reg 1"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        checkReg(regList, cashSales.text, false);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Updated Register 2 Log"),
+                          ),
+                        );
+                        // RegisterLogState().updateList(false);
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("An Error Has Occurred"),
+                          ),
+                        );
+                      }
+                      dispose();
+                    },
+                    child: const Text("Submit to Reg 2"),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

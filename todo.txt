@@ -1,6 +1,6 @@
 1. Re-do code for the app following SOLID principles
-  i. Separate the tabs into their own .dart files
-  ii. Minimize main.dart usage
+  i. Separate the tabs into their own .dart files *
+  ii. Minimize main.dart usage *
   iii. Reduce redundancy in code
   v. Add data validation (Reject empty submissions)
 2. Rearrange the UI
