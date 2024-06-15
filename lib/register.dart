@@ -181,16 +181,16 @@ class RegisterState extends State<Register>
 
   @override
   void dispose() {
-    penni.dispose();
-    dimes.dispose();
-    nickl.dispose();
-    quart.dispose();
-    ones.dispose();
-    fives.dispose();
-    tens.dispose();
-    twents.dispose();
-    extra.dispose();
-    cashSales.dispose();
+    // penni.dispose();
+    // dimes.dispose();
+    // nickl.dispose();
+    // quart.dispose();
+    // ones.dispose();
+    // fives.dispose();
+    // tens.dispose();
+    // twents.dispose();
+    // extra.dispose();
+    // cashSales.dispose();
     super.dispose();
   }
 
