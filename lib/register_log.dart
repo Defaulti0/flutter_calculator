@@ -80,7 +80,9 @@ class RegisterLogState extends State<RegisterLog> {
           ),
           RefreshIndicator(
             onRefresh: () async {
-              future = getReg(regType);
+              setState(() {
+                future = getReg(regType);
+              });
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text("Refreshed Register Log"),
@@ -93,26 +95,27 @@ class RegisterLogState extends State<RegisterLog> {
               itemBuilder: ((context, index) {
                 final reg = regData[index];
 
-                final dateTime = reg['Date'].toDate();
-                final formattedDate =
-                    DateFormat('MM/dd/yyyy - HH:mm:ss').format(dateTime);
+                final dateTime = reg['Date']?.toDate();
+                final formattedDate = dateTime != null
+                    ? DateFormat('MM/dd/yyyy - HH:mm:ss').format(dateTime)
+                    : 'Unknown Date';
 
                 return ExpansionTile(
                   title: Text(formattedDate),
                   children: [
-                    Text('Pennies: \$${oCcy.format(reg['Pennies'])}'),
-                    Text('Nickels: \$${oCcy.format(reg['Nickels'])}'),
-                    Text('Dimes: \$${oCcy.format(reg['Dimes'])}'),
-                    Text('Quarters: \$${oCcy.format(reg['Quarters'])}'),
-                    Text('Ones: \$${oCcy.format(reg['Ones'])}'),
-                    Text('Fives: \$${oCcy.format(reg['Fives'])}'),
-                    Text('Tens: \$${oCcy.format(reg['Tens'])}'),
-                    Text('Twenties: \$${oCcy.format(reg['Twenties'])}'),
-                    Text('Extra: \$${oCcy.format(reg['Extra'])}'),
-                    Text('Status: ${reg['Status']}'),
-                    Text('Total: \$${reg['Total']?.toStringAsFixed(2)}'),
+                    Text('Pennies: \$${oCcy.format(reg['Pennies'] ?? 0)}'),
+                    Text('Nickels: \$${oCcy.format(reg['Nickels'] ?? 0)}'),
+                    Text('Dimes: \$${oCcy.format(reg['Dimes'] ?? 0)}'),
+                    Text('Quarters: \$${oCcy.format(reg['Quarters'] ?? 0)}'),
+                    Text('Ones: \$${oCcy.format(reg['Ones'] ?? 0)}'),
+                    Text('Fives: \$${oCcy.format(reg['Fives'] ?? 0)}'),
+                    Text('Tens: \$${oCcy.format(reg['Tens'] ?? 0)}'),
+                    Text('Twenties: \$${oCcy.format(reg['Twenties'] ?? 0)}'),
+                    Text('Extra: \$${oCcy.format(reg['Extra'] ?? 0)}'),
+                    Text('Status: ${reg['Status'] ?? 'Unknown'}'),
+                    Text('Total: \$${(reg['Total'] ?? 0).toStringAsFixed(2)}'),
                     Text(
-                        'Cash Sales: \$${reg['CashSales']?.toStringAsFixed(2)}'),
+                        'Cash Sales: \$${(reg['CashSales'] ?? 0).toStringAsFixed(2)}'),
                   ],
                 );
               }),
