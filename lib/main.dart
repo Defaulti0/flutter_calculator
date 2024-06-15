@@ -55,10 +55,8 @@ class RegState extends State<RegMain> with SingleTickerProviderStateMixin {
             bottom: TabBar(
               controller: tabController,
               tabs: const [
-                Tab(
-                    text: "Register Calc",
-                    icon: Icon(Icons.calculate_outlined)),
-                Tab(text: "Register Logs", icon: Icon(Icons.history_outlined)),
+                Tab(text: "Calculator", icon: Icon(Icons.calculate_outlined)),
+                Tab(text: "History", icon: Icon(Icons.history_outlined)),
               ],
             ),
             title: const Text('Register Calculator'),

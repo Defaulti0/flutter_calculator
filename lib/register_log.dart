@@ -7,6 +7,8 @@ class RegisterLog extends StatefulWidget {
 
   @override
   State<RegisterLog> createState() => RegisterLogState();
+
+  static void updateList() {}
 }
 
 // Get a reference to the firestore
