@@ -139,7 +139,6 @@ class RegisterState extends State<Register>
   late TextEditingController extra = TextEditingController(text: "\$0");
   late TextEditingController cashSales = TextEditingController(text: "\$0");
 
-  @override
   void clear() {
     penni.clear();
     dimes.clear();
