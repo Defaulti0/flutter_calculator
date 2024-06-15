@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-// import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RegisterLog extends StatefulWidget {
   const RegisterLog({super.key});
@@ -57,71 +56,77 @@ class RegisterLogState extends State<RegisterLog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              DropdownButton<String>(
-                items: const [
-                  DropdownMenuItem(
-                    value: "Register_1",
-                    child: Text("Register 1"),
-                  ),
-                  DropdownMenuItem(
-                    value: "Register_2",
-                    child: Text("Register 2"),
-                  ),
-                ],
-                value: regType,
-                onChanged: (value) {
-                  setState(() {
-                    regType = value!;
-                    updateList(regType);
-                  });
-                },
-              ),
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                child: SegmentedButton(
+                  segments: const <ButtonSegment<String>>[
+                    ButtonSegment(
+                      value: "Register_1",
+                      label: Text("Register 1"),
+                    ),
+                    ButtonSegment(
+                      value: "Register_2",
+                      label: Text("Register 2"),
+                    ),
+                  ],
+                  selected: <String>{regType},
+                  onSelectionChanged: (Set<String> newSelection) {
+                    setState(() {
+                      regType = newSelection.first;
+                      updateList(regType);
+                    });
+                  },
+                ),
+              )
             ],
           ),
-          RefreshIndicator(
-            onRefresh: () async {
-              setState(() {
-                future = getReg(regType);
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Refreshed Register Log"),
-                ),
-              );
-            },
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: regData.length,
-              itemBuilder: ((context, index) {
-                final reg = regData[index];
-
-                final dateTime = reg['Date']?.toDate();
-                final formattedDate = dateTime != null
-                    ? DateFormat('MM/dd/yyyy - HH:mm:ss').format(dateTime)
-                    : 'Unknown Date';
-
-                return ExpansionTile(
-                  title: Text(formattedDate),
-                  children: [
-                    Text('Pennies: \$${oCcy.format(reg['Pennies'] ?? 0)}'),
-                    Text('Nickels: \$${oCcy.format(reg['Nickels'] ?? 0)}'),
-                    Text('Dimes: \$${oCcy.format(reg['Dimes'] ?? 0)}'),
-                    Text('Quarters: \$${oCcy.format(reg['Quarters'] ?? 0)}'),
-                    Text('Ones: \$${oCcy.format(reg['Ones'] ?? 0)}'),
-                    Text('Fives: \$${oCcy.format(reg['Fives'] ?? 0)}'),
-                    Text('Tens: \$${oCcy.format(reg['Tens'] ?? 0)}'),
-                    Text('Twenties: \$${oCcy.format(reg['Twenties'] ?? 0)}'),
-                    Text('Extra: \$${oCcy.format(reg['Extra'] ?? 0)}'),
-                    Text('Status: ${reg['Status'] ?? 'Unknown'}'),
-                    Text('Total: \$${(reg['Total'] ?? 0).toStringAsFixed(2)}'),
-                    Text(
-                        'Cash Sales: \$${(reg['CashSales'] ?? 0).toStringAsFixed(2)}'),
-                  ],
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                setState(() {
+                  future = getReg(regType);
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Refreshed Register Log"),
+                  ),
                 );
-              }),
-              physics: const AlwaysScrollableScrollPhysics(),
+              },
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: regData.length,
+                itemBuilder: ((context, index) {
+                  final reg = regData[index];
+
+                  final dateTime = reg['Date']?.toDate();
+                  final formattedDate = dateTime != null
+                      ? DateFormat('MM/dd/yyyy - HH:mm:ss').format(dateTime)
+                      : 'Unknown Date';
+
+                  return ExpansionTile(
+                    title: Text(formattedDate),
+                    children: [
+                      Text('Pennies: \$${oCcy.format(reg['Pennies'] ?? 0)}'),
+                      Text('Nickels: \$${oCcy.format(reg['Nickels'] ?? 0)}'),
+                      Text('Dimes: \$${oCcy.format(reg['Dimes'] ?? 0)}'),
+                      Text('Quarters: \$${oCcy.format(reg['Quarters'] ?? 0)}'),
+                      Text('Ones: \$${oCcy.format(reg['Ones'] ?? 0)}'),
+                      Text('Fives: \$${oCcy.format(reg['Fives'] ?? 0)}'),
+                      Text('Tens: \$${oCcy.format(reg['Tens'] ?? 0)}'),
+                      Text('Twenties: \$${oCcy.format(reg['Twenties'] ?? 0)}'),
+                      Text('Extra: \$${oCcy.format(reg['Extra'] ?? 0)}'),
+                      Text('Status: ${reg['Status'] ?? 'Unknown'}'),
+                      Text(
+                          'Total: \$${(reg['Total'] ?? 0).toStringAsFixed(2)}'),
+                      Text(
+                          'Cash Sales: \$${(reg['CashSales'] ?? 0).toStringAsFixed(2)}'),
+                    ],
+                  );
+                }),
+                physics: const AlwaysScrollableScrollPhysics(),
+              ),
             ),
-          ),
+          )
         ]);
       },
     );
