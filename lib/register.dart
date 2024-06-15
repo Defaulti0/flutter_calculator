@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:register_calculator/register_log.dart';
-// import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:intl/intl.dart';
 
@@ -12,10 +10,6 @@ class Register extends StatefulWidget {
   @override
   State<Register> createState() => RegisterState();
 }
-
-//NOTE: To be replaced with Firestore
-// Get a reference your Supabase client
-// final supabase = Supabase.instance.client;
 
 // Get a reference to the Firestore client
 final db = FirebaseFirestore.instance;
@@ -81,22 +75,6 @@ Future<void> sendReg(List registerList, String isExact, double totalSum,
             "\n\n\nAdded Data with ID: ${documentSnapshot.id}\n\n\n"))
         .onError(
             (error, stackTrace) => debugPrint("An error has ocurred: $error"));
-
-    //   await supabase.from('register2').insert({
-    // 'Date': DateTime.now().toIso8601String(),
-    // 'Pennies': registerList[7],
-    // 'Nickels': registerList[5],
-    // 'Dimes': registerList[6],
-    // 'Quarters': registerList[4],
-    // 'Ones': registerList[3],
-    // 'Fives': registerList[2],
-    // 'Tens': registerList[1],
-    // 'Twenties': registerList[0],
-    // 'Extra': registerList[8],
-    // 'Status': isExact,
-    // 'Total': totalSum,
-    // 'CashSales': double.parse(cashSales.substring(1)),
-    //   });
   } else {
     db
         .collection("Register_1")
@@ -105,24 +83,6 @@ Future<void> sendReg(List registerList, String isExact, double totalSum,
             "\n\n\nAdded Data with ID: ${documentSnapshot.id}\n\n\n"))
         .onError(
             (error, stackTrace) => debugPrint("An error has ocurred: $error"));
-    // .onError((error, stackTrace) =>
-    //     debugPrint("error writing document: $error"));
-
-    // await supabase.from('register1').insert({
-    //   'Date': DateTime.now().toIso8601String(),
-    //   'Pennies': registerList[7],
-    //   'Nickels': registerList[5],
-    //   'Dimes': registerList[6],
-    //   'Quarters': registerList[4],
-    //   'Ones': registerList[3],
-    //   'Fives': registerList[2],
-    //   'Tens': registerList[1],
-    //   'Twenties': registerList[0],
-    //   'Extra': registerList[8],
-    //   'Status': isExact,
-    //   'Total': totalSum,
-    //   'CashSales': double.parse(cashSales.substring(1)),
-    // });
   }
 }
 
