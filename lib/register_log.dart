@@ -18,7 +18,8 @@ final db = FirebaseFirestore.instance;
 final oCcy = NumberFormat("#,##0.00", "en_US");
 
 Future<List<Map<String, dynamic>>> getReg(String register) async {
-  final Query<Map<String, dynamic>> colRef = db.collection(register).limit(10);
+  final Query<Map<String, dynamic>> colRef =
+      db.collection(register).orderBy('Date', descending: true).limit(10);
 
   final snapshot = await colRef.get();
   // Parse documents
