@@ -106,106 +106,96 @@ class RegisterLogState extends State<RegisterLog> {
                       ? DateFormat('MM/dd/yyyy - HH:mm:ss').format(dateTime)
                       : 'Unknown Date';
 
-                  return ExpansionTile(title: Text(formattedDate), children: [
-                    DataTable(
-                      columns: const [
-                        DataColumn(label: Text('Denomination')),
-                        DataColumn(label: Text('Amount')),
-                      ],
-                      rows: [
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Quarters')),
-                            DataCell(
-                                Text('\$${oCcy.format(reg['Quarters'] ?? 0)}')),
+                  return ExpansionTile(
+                      title: Text(formattedDate),
+                      childrenPadding: const EdgeInsets.only(bottom: 5.0),
+                      children: [
+                        DataTable(
+                          columns: const [
+                            DataColumn(label: Text('Denomination')),
+                            DataColumn(label: Text('Amount')),
+                          ],
+                          rows: [
+                            DataRow(
+                              cells: [
+                                const DataCell(Text('Quarters')),
+                                DataCell(Text(
+                                    '\$${oCcy.format(reg['Quarters'] ?? 0)}')),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                const DataCell(Text('Dimes')),
+                                DataCell(Text(
+                                    '\$${oCcy.format(reg['Dimes'] ?? 0)}')),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                const DataCell(Text('Nickels')),
+                                DataCell(Text(
+                                    '\$${oCcy.format(reg['Nickels'] ?? 0)}')),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                const DataCell(Text('Pennies')),
+                                DataCell(Text(
+                                    '\$${oCcy.format(reg['Pennies'] ?? 0)}')),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                const DataCell(Text('Twenties')),
+                                DataCell(Text(
+                                    '\$${oCcy.format(reg['Twenties'] ?? 0)}')),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                const DataCell(Text('Tens')),
+                                DataCell(
+                                    Text('\$${oCcy.format(reg['Tens'] ?? 0)}')),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                const DataCell(Text('Fives')),
+                                DataCell(Text(
+                                    '\$${oCcy.format(reg['Fives'] ?? 0)}')),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                const DataCell(Text('Ones')),
+                                DataCell(
+                                    Text('\$${oCcy.format(reg['Ones'] ?? 0)}')),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                const DataCell(Text('Extra')),
+                                DataCell(Text(
+                                    '\$${oCcy.format(reg['Extra'] ?? 0)}')),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                const DataCell(Text('Total')),
+                                DataCell(Text(
+                                    '\$${oCcy.format(reg['Total'] ?? 0)}')),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                const DataCell(Text('Cash Sales')),
+                                DataCell(Text(
+                                    '\$${(reg['CashSales'] ?? 0).toStringAsFixed(2)}')),
+                              ],
+                            ),
                           ],
                         ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Dimes')),
-                            DataCell(
-                                Text('\$${oCcy.format(reg['Dimes'] ?? 0)}')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Nickels')),
-                            DataCell(
-                                Text('\$${oCcy.format(reg['Nickels'] ?? 0)}')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Pennies')),
-                            DataCell(
-                                Text('\$${oCcy.format(reg['Pennies'] ?? 0)}')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Twenties')),
-                            DataCell(
-                                Text('\$${oCcy.format(reg['Twenties'] ?? 0)}')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Tens')),
-                            DataCell(
-                                Text('\$${oCcy.format(reg['Tens'] ?? 0)}')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Fives')),
-                            DataCell(
-                                Text('\$${oCcy.format(reg['Fives'] ?? 0)}')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Ones')),
-                            DataCell(
-                                Text('\$${oCcy.format(reg['Ones'] ?? 0)}')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Extra')),
-                            DataCell(
-                                Text('\$${oCcy.format(reg['Extra'] ?? 0)}')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Total')),
-                            DataCell(
-                                Text('\$${oCcy.format(reg['Total'] ?? 0)}')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Status')),
-                            DataCell(Text('${reg['Status'] ?? 'Unknown'}')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Total')),
-                            DataCell(Text(
-                                '\$${(reg['Total'] ?? 0).toStringAsFixed(2)}')),
-                          ],
-                        ),
-                        DataRow(
-                          cells: [
-                            const DataCell(Text('Cash Sales')),
-                            DataCell(Text(
-                                '\$${(reg['CashSales'] ?? 0).toStringAsFixed(2)}')),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ]);
+                      ]);
                 }),
                 physics: const AlwaysScrollableScrollPhysics(),
               ),

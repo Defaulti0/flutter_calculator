@@ -29,29 +29,19 @@ double findSum(List registerList) {
 }
 
 void checkReg(List registerList, String cashSales, bool isReg1) {
-  double regConst = 317.50;
-  String isExact = "";
   double sum = findSum(registerList);
-
-  if (sum > regConst) {
-    isExact = "Over";
-  } else if (sum < regConst) {
-    isExact = "Under";
-  } else {
-    isExact = "Correct";
-  }
 
   if (sum != 0) {
     if (!isReg1) {
-      sendReg(registerList, isExact, sum, cashSales, isReg1);
+      sendReg(registerList, sum, cashSales, isReg1);
     } else {
-      sendReg(registerList, isExact, sum, cashSales, isReg1);
+      sendReg(registerList, sum, cashSales, isReg1);
     }
   }
 }
 
-Future<void> sendReg(List registerList, String isExact, double totalSum,
-    String cashSales, bool isReg1) async {
+Future<void> sendReg(
+    List registerList, double totalSum, String cashSales, bool isReg1) async {
   final docData = {
     'Date': DateTime.now(),
     'Pennies': registerList[7],
@@ -63,7 +53,6 @@ Future<void> sendReg(List registerList, String isExact, double totalSum,
     'Tens': registerList[1],
     'Twenties': registerList[0],
     'Extra': registerList[8],
-    'Status': isExact,
     'Total': totalSum,
     'CashSales': double.parse(cashSales.substring(1)),
   };
@@ -204,7 +193,12 @@ class RegisterState extends State<Register>
             child: Row(
               children: [
                 const Expanded(
-                  child: Center(child: Text("Cash Sales:")),
+                  child: Center(
+                      child: Text(
+                    "Cash Sales:",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                  )),
                 ),
                 Expanded(
                   child: Center(
@@ -244,7 +238,11 @@ class RegisterState extends State<Register>
               children: [
                 const Expanded(
                   child: Center(
-                    child: Text("Quarters: "),
+                    child: Text(
+                      "Quarters: ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -281,7 +279,11 @@ class RegisterState extends State<Register>
               children: [
                 const Expanded(
                   child: Center(
-                    child: Text("Dimes: "),
+                    child: Text(
+                      "Dimes: ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -318,7 +320,11 @@ class RegisterState extends State<Register>
               children: [
                 const Expanded(
                   child: Center(
-                    child: Text("Nickels: "),
+                    child: Text(
+                      "Nickels: ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -355,7 +361,11 @@ class RegisterState extends State<Register>
               children: [
                 const Expanded(
                   child: Center(
-                    child: Text("Pennies: "),
+                    child: Text(
+                      "Pennies: ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -392,7 +402,11 @@ class RegisterState extends State<Register>
               children: [
                 const Expanded(
                   child: Center(
-                    child: Text("Twenties: "),
+                    child: Text(
+                      "Twenties: ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -429,7 +443,11 @@ class RegisterState extends State<Register>
               children: [
                 const Expanded(
                   child: Center(
-                    child: Text("Tens: "),
+                    child: Text(
+                      "Tens: ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -466,7 +484,11 @@ class RegisterState extends State<Register>
               children: [
                 const Expanded(
                   child: Center(
-                    child: Text("Fives: "),
+                    child: Text(
+                      "Fives: ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -503,7 +525,11 @@ class RegisterState extends State<Register>
               children: [
                 const Expanded(
                   child: Center(
-                    child: Text("Ones: "),
+                    child: Text(
+                      "Ones: ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -539,7 +565,12 @@ class RegisterState extends State<Register>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Expanded(
-                  child: Center(child: Text("Extra Money: ")),
+                  child: Center(
+                      child: Text(
+                    "Extra Money: ",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                  )),
                 ),
                 Expanded(
                   child: Center(
@@ -572,22 +603,28 @@ class RegisterState extends State<Register>
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(2.0),
+            padding: const EdgeInsets.all(5.0),
             margin: const EdgeInsets.all(5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Flexible(
-                    child:
-                        Text("Total: \$${doubleFormat.format(regList[10])}")),
+                    child: Text(
+                  "Total: \$${doubleFormat.format(regList[10])}",
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20.0),
+                )),
                 Flexible(
                     child: Text(
-                        "After Cash Sales: \$${doubleFormat.format(regList[11])}")),
+                  "After Cash Sales: \$${doubleFormat.format(regList[11])}",
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20.0),
+                )),
               ],
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(2.0),
+            padding: const EdgeInsets.all(5.0),
             margin: const EdgeInsets.all(5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
