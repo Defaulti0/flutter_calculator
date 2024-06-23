@@ -209,6 +209,7 @@ class RegisterState extends State<Register>
                 Expanded(
                   child: Center(
                       child: TextFormField(
+                    textInputAction: TextInputAction.next,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: '0.00',
@@ -249,6 +250,7 @@ class RegisterState extends State<Register>
                 Expanded(
                   child: Center(
                     child: TextFormField(
+                      textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: '25¢',
@@ -285,6 +287,7 @@ class RegisterState extends State<Register>
                 Expanded(
                   child: Center(
                     child: TextFormField(
+                      textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: '10¢',
@@ -321,6 +324,7 @@ class RegisterState extends State<Register>
                 Expanded(
                   child: Center(
                     child: TextFormField(
+                      textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: '5¢',
@@ -357,6 +361,7 @@ class RegisterState extends State<Register>
                 Expanded(
                   child: Center(
                     child: TextFormField(
+                      textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: '1¢',
@@ -393,6 +398,7 @@ class RegisterState extends State<Register>
                 Expanded(
                   child: Center(
                     child: TextFormField(
+                      textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: '\$20',
@@ -429,6 +435,7 @@ class RegisterState extends State<Register>
                 Expanded(
                   child: Center(
                     child: TextFormField(
+                      textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: '\$10',
@@ -465,6 +472,7 @@ class RegisterState extends State<Register>
                 Expanded(
                   child: Center(
                     child: TextFormField(
+                      textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: '\$5',
@@ -501,6 +509,7 @@ class RegisterState extends State<Register>
                 Expanded(
                   child: Center(
                     child: TextFormField(
+                      textInputAction: TextInputAction.next,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: '\$1',
@@ -535,6 +544,7 @@ class RegisterState extends State<Register>
                 Expanded(
                   child: Center(
                     child: TextFormField(
+                      textInputAction: TextInputAction.done,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: '0.00',
