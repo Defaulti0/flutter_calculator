@@ -23,9 +23,9 @@ class RegMain extends StatefulWidget {
 
 class RegState extends State<RegMain> with SingleTickerProviderStateMixin {
   static final _defaultLightScheme = ColorScheme.fromSwatch(
+      primarySwatch: Colors.blue, brightness: Brightness.light);
+  static final _defaultDarkScheme = ColorScheme.fromSwatch(
       primarySwatch: Colors.blue, brightness: Brightness.dark);
-  static final _defaultDarkScheme =
-      ColorScheme.fromSwatch(primarySwatch: Colors.blue);
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController tabController;
