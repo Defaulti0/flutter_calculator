@@ -139,6 +139,7 @@ class RegisterState extends State<Register>
     twents.clear();
     extra.clear();
     cashSales.clear();
+    cashSales.text = "\$0.00";
     // super.dispose();
   }
 
