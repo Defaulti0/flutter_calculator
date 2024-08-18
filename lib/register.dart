@@ -639,7 +639,7 @@ class RegisterState extends State<Register>
                 ElevatedButton(
                   onPressed: () async {
                     try {
-                      checkReg(regList, cashSales.text, false);
+                      checkReg(regList, cashSales.text, true);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Updated Register 1 Log"),
