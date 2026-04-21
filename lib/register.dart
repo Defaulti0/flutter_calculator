@@ -90,8 +90,8 @@ class RegisterState extends State<Register>
     7: pennies
     8: extra money
     9: cash sales
-    10: total value (sum of 0-8)
-    11: total value after cash sales (10 - 9)
+    10: total value (sum of 0 to 8)
+    11: total value after cash sales (10 minus 9)
   */
   var regList = [
     0.00,
@@ -108,7 +108,7 @@ class RegisterState extends State<Register>
     0.00,
   ];
 
-  void calcCashSales1(double tCashVal, String csInput) {
+  void calcCS(double tCashVal, String csInput) {
     String cleanedCsInput = csInput.replaceAll(RegExp(r'[^\d.]'), '');
 
     setState(() {
@@ -139,7 +139,15 @@ class RegisterState extends State<Register>
     twents.clear();
     extra.clear();
     cashSales.clear();
-    // super.dispose();
+    cashSales.text = "\$0.00";
+  }
+
+  void resetRegister() {
+    setState(() {
+      for (var i = 0; i < regList.length; i++) {
+        regList[i] = 0.0;
+      }
+    });
   }
 
   void updateText(String textController, int currType) {
@@ -178,7 +186,7 @@ class RegisterState extends State<Register>
 
       regList[10] = findSum(regList);
 
-      calcCashSales1(regList[10], cashSales.text);
+      calcCS(regList[10], cashSales.text);
     });
   }
 
@@ -219,10 +227,9 @@ class RegisterState extends State<Register>
                     controller: cashSales,
                     onChanged: (String value) async {
                       if (cashSales.text == "") {
-                        calcCashSales1(regList[10], "0");
+                        calcCS(regList[10], "0");
                       } else {
-                        calcCashSales1(
-                            regList[10], cashSales.text.substring(1));
+                        calcCS(regList[10], cashSales.text.substring(1));
                       }
                     },
                   )),
@@ -616,7 +623,7 @@ class RegisterState extends State<Register>
                 )),
                 Flexible(
                     child: Text(
-                  "After Cash Sales: \$${doubleFormat.format(regList[11])}",
+                  "After Sales: \$${doubleFormat.format(regList[11])}",
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 20.0),
                 )),
@@ -645,6 +652,7 @@ class RegisterState extends State<Register>
                         ),
                       );
                     }
+                    resetRegister();
                     clear();
                   },
                   child: const Text("Submit to Reg 1"),
@@ -665,6 +673,7 @@ class RegisterState extends State<Register>
                         ),
                       );
                     }
+                    resetRegister();
                     clear();
                   },
                   child: const Text("Submit to Reg 2"),
